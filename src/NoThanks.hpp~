@@ -1,0 +1,4 @@
+//Header file
+class NoThanks {
+  int a;
+};
