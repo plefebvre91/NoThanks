@@ -1,12 +1,13 @@
-//Header file
+#ifndef NOTHANKS_HPP
+#define NOTHANKS_HPP
 #include <iostream>
 
-class NoThanks {
-public: 
-  void run(){
-    std::cout << "No Thanks!" << std::endl;
-  }
+#include "Definitions.hpp"
 
-private:
-  int a;
+class NoThanks {
+public:
+  NoThanks();
+  ~NoThanks();
+  void run();
 };
+#endif
