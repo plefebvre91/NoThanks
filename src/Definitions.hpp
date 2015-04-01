@@ -1,5 +1,7 @@
 //Global information
 #define NOTHX_NB_CARD 35
+#define NOTHX_NB_CHIPS 11
+
 #define NOTHX_NB_PLAYERS_MAX 5
 
 //Window parameter
