@@ -26,10 +26,10 @@ int Player::getScore() {
   while(index > 1) {
     if(cards.test(index)) {
       index--;
-      while(index >= 1 && cards.test(index)){
+      while(index >= 1 && cards.test(index)) {
 	index--;
       }
-      score -= (index+1)
+      score -= (index+1);
     }
     else {
       index--;
