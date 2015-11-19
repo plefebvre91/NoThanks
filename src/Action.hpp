@@ -1,0 +1,10 @@
+#ifndef NOTHANKS_ACTION_HPP
+#define NOTHANKS_ACTION_HPP
+
+enum Action {
+  ACT_NOTHING,
+  ACT_TAKE_CHIPS,
+  ACT_GIVE_A_CHIP
+};
+
+#endif
