@@ -1,6 +1,6 @@
 #include "NoThanks.hpp"
 
-NoThanks::NoThanks():deck() {
+NoThanks::NoThanks() {
 
 }
 
@@ -8,8 +8,11 @@ NoThanks::NoThanks():deck() {
 NoThanks::~NoThanks() {
 
 }
-void NoThanks::execute() {
-  Logger::get().info("execute()");
+
+void NoThanks::execute(const Action& action) {
+  if(action == ACT_NOTHING)  Logger::get().info("Action rien"); 
+  if(action == ACT_TAKE_CHIPS)  Logger::get().info("Action Prendre"); 
+  if(action == ACT_GIVE_A_CHIP)  Logger::get().info("Action Donner"); 
 }
 
 
@@ -24,24 +27,29 @@ bool NoThanks::gameIsFinished() const {
 
 
 void NoThanks::run(){
-  Logger::get().info("Démarrage");
-  std::cout << "No Thanks!" << std::endl;
+  Logger::get().info(NOTHX_TITLE);
   
   int currentPlayer = 0;
 
-  while(!gameIsFinished() && currentPlayer < 5) {
+  PlayerHuman *p = new PlayerHuman();
+  Player& player = *p;  
+
+  while(!gameIsFinished()) {
     
     //Player player = player[i]; 
-    Logger::get().info("Recuperation de l'action du joueur suivant");
-    //Action action = player.play();
-    Logger::get().info("Execution de l'action");
-    execute();
+    Action action = player.play();
+   
+    execute(action);
     Logger::get().info("Affichage...");
     display();
-    Logger::get().info("Selection du joueur suivant");
-
-    ++currentPlayer;
-    //    currentPlayer %=3;
+    
+    selectNextPlayer();
   }
 }
 
+
+void NoThanks::selectNextPlayer(){
+  Logger::get().info("Joueur suivant...");
+  currentPlayer++;
+  currentPlayer%=NOTHX_NB_PLAYERS_MAX;
+}

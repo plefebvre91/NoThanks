@@ -1,22 +1,26 @@
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#ifndef NOTHANKS_PLAYER_HPP
+#define NOTHANKS_PLAYER_HPP
+
+#include <set>
 
 #include "Definitions.hpp"
-#include <bitset>
+#include "Logger.hpp"
+#include "Action.hpp"
 
 class Player {
 public:
-  //Constructor/Destructor
   Player();
-  ~Player();
 
-  int getCards();
-  int getChips();
-  int getScore();
+  virtual ~Player();  
+  virtual Action play() = 0;
+
+  int getCards() const;
+  int getChips() const;
+  
 
 private:
-  std::bitset<NOTHX_NB_CARD> cards; 
   int chips;
+  std::set<int> cards;
 };
 
 #endif

@@ -4,22 +4,38 @@
 
 #include "Definitions.hpp"
 #include "Player.hpp"
+#include "PlayerHuman.hpp"
 #include "Deck.hpp"
 #include "Logger.hpp"
+#include "Action.hpp"
+
+/**
+ * Main class
+ */
 
 class NoThanks {
 public:
+  /**
+   * Constructor
+   */
   NoThanks();
+
+  /**
+   * Destructor
+   */
   ~NoThanks();
+
+  /**
+   * Main loop
+   */
   void run();
 
 private:
   bool gameIsFinished() const;
-  void execute();
-  void display();
-
-
-  Deck deck;
-  Player player[NOTHX_NB_PLAYERS_MAX];
+  void execute(const Action& action);
+  void display();  
+  void selectNextPlayer();
+  
+  int currentPlayer;
 };
 #endif
