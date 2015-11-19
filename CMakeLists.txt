@@ -2,7 +2,7 @@ project(NoThanks)
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_CXX_FLAGS "-Wextra -Wall -O3 --std=c++11")
 
-set(SRC_FILES src/main.cpp src/NoThanks.cpp src/Player.cpp  src/Deck.cpp)
+set(SRC_FILES src/main.cpp src/NoThanks.cpp src/Player.cpp  src/Deck.cpp src/Logger.cpp)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 

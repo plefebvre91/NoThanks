@@ -18,9 +18,7 @@ bool Deck::isEmpty() {
   return topIndex == (NOTHX_NB_CARD-1);
 }
 
-int Deck::getNext() {
-  return deck[topIndex];
-}
+
 
 void Deck::shuffle() {
   int randomIndex;
