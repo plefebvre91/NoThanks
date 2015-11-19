@@ -2,14 +2,19 @@
 
 NoThanks::NoThanks(): cardOnTop(), deck(){
   nbPlayers = 2;
-  players = new PlayerHuman[nbPlayers];
-  players[0].setName("Bobiwan");
-  players[1].setName("Liara");
+  players= new Player*[nbPlayers];
+  players[0] = new PlayerHuman();
+  players[1] = new PlayerRandom();
+  players[0]->setName("Bobiwan");
+  players[1]->setName("Liara");
 }
 
 
 NoThanks::~NoThanks() {
-
+  for(int i=0; i<nbPlayers; i++){
+    delete players[i];
+  }
+  delete [] players;
 }
 
 void NoThanks::execute(const Action& action, Player& player) {
@@ -45,7 +50,7 @@ void NoThanks::execute(const Action& action, Player& player) {
 void NoThanks::display() {
   std::cout << "Il y a " << chipsOnTable << " jetons sur la table\n";
   for(int i=0;i<nbPlayers; i++){
-    players[i].info();
+    players[i]->info();
   }
 }
 
@@ -58,7 +63,7 @@ void NoThanks::run(){
   Logger::get().info(NOTHX_TITLE);
   
   while(!gameIsFinished()) {
-    Player& player = players[currentPlayer]; 
+    Player& player = *players[currentPlayer]; 
     
     std::cout << "Carte distribuée : " << deck.first().getValue() << "\n";
 

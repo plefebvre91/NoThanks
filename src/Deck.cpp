@@ -1,7 +1,6 @@
 #include "Deck.hpp"
 
 Deck::Deck() {
-  srand(time(0));
   for(int i=0; i<NOTHX_NB_CARD; i++){
     indexes[i] = i;
     cards[i].setValue(i+3);

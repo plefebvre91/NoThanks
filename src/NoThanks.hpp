@@ -8,6 +8,7 @@
 #include "Definitions.hpp"
 #include "Player.hpp"
 #include "PlayerHuman.hpp"
+#include "PlayerRandom.hpp"
 #include "Deck.hpp"
 #include "Logger.hpp"
 #include "Action.hpp"
@@ -71,7 +72,7 @@ public:
   // Deck
   Deck deck;  
   
-  Player* players;
+  Player** players;
 
 };
 #endif

@@ -37,10 +37,10 @@ const std::string&  Player::getName() const {
 
 
 void Player::info() const {
-  std::cout << "Joueur " << name << " a " << chips << " jetons\n";
-  std::cout << "Cartes: ";
+  std::cout <<  name << " (" << chips << ") : ";
   for(auto c : cards) {
     std::cout << c << " - ";
   }
-  std::cout << std::endl;
+  std::cout << std::endl << std::endl;
+
 }

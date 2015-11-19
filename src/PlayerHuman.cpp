@@ -8,14 +8,14 @@ PlayerHuman::~PlayerHuman() {
 
 
 Action PlayerHuman::play(const Card& card) {
-  Action action = ACT_NOTHING;
-  Logger::get().info("Calcul de l'action : play()");
   int a;
-
+  Action action;
+  (void)card;
   std::cout << "1 : prendre la carte et les jetons" << std::endl;
   std::cout << "2 : donner un jeton" << std::endl;
 
-  std::cin >> a;
+  while(a!= 1 && a!=2)
+    std::cin >> a;
 
   switch(a){
   case 1: action = ACT_TAKE_CHIPS; break;
