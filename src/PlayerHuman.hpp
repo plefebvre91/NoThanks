@@ -9,7 +9,7 @@ public:
   PlayerHuman();
 
   virtual ~PlayerHuman();  
-  virtual Action play();
+  virtual Action play(const Card& card);
 };
 
 #endif

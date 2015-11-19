@@ -30,6 +30,12 @@ void Player::setName(std::string str) {
   name = str;
 }
 
+
+const std::string&  Player::getName() const {
+  return name;
+}
+
+
 void Player::info() const {
   std::cout << "Joueur " << name << " a " << chips << " jetons\n";
   std::cout << "Cartes: ";

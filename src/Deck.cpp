@@ -1,6 +1,7 @@
 #include "Deck.hpp"
 
 Deck::Deck() {
+  srand(time(0));
   for(int i=0; i<NOTHX_NB_CARD; i++){
     indexes[i] = i;
     cards[i].setValue(i+3);
@@ -13,7 +14,7 @@ Deck::~Deck() {
 
 }
 
-bool Deck::isEmpty() {
+bool Deck::isEmpty() const {
   return top == (NOTHX_NB_CARD-1);
 }
 
@@ -21,7 +22,7 @@ const Card& Deck::next() {
   return cards[indexes[top++]];
 }
 
-const Card& Deck::top(){
+const Card& Deck::first(){
   return cards[indexes[top]];
 }
 

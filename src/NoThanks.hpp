@@ -1,5 +1,6 @@
 #ifndef NOTHANKS_HPP
 #define NOTHANKS_HPP
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
@@ -18,34 +19,59 @@
 
 class NoThanks {
 public:
-  /**
-   * Constructor
-   */
-  NoThanks();
+   /**
+    * Constructor
+    */
+   NoThanks();
 
-  /**
-   * Destructor
-   */
-  ~NoThanks();
+   /**
+    * Destructor
+    */
+   ~NoThanks();
 
-  /**
-   * Main loop
-   */
-  void run();
+   /**
+    * Main loop
+    */
+   void run();
 
-private:
-  bool gameIsFinished() const;
-  void execute(const Action& action, Player& player);
-  void display();  
-  void selectNextPlayer();
+ private:
+   /**
+    * \return true if there is no more card in deck
+    */
+   bool gameIsFinished() const;
+
+   /**
+    * A player move
+    */
+   void execute(const Action& action, Player& player);
+
+   /**
+    * Information about game
+    */
+   void display();  
+
+   /**
+    * Select the next player
+    */
+   void selectNextPlayer();
+
+   // Current player index
+   int currentPlayer;
+
+   // Chips put on table
+   int chipsOnTable;
+   int nbPlayers;
   
-  int currentPlayer;
-  int chipsOnTable;
+  // Players scores
+  int score[NOTHX_NB_PLAYERS_MAX];
   
+  // Visible card on deck
   Card cardOnTop;
-  Deck deck;
+
+  // Deck
+  Deck deck;  
   
-  
-  
+  Player* players;
+
 };
 #endif

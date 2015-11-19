@@ -6,13 +6,14 @@
 #include "Definitions.hpp"
 #include "Logger.hpp"
 #include "Action.hpp"
+#include "Card.hpp"
 
 class Player {
 public:
   Player();
 
   virtual ~Player();  
-  virtual Action play() = 0;
+  virtual Action play(const Card& card) = 0;
 
   int getCards() const;
   
@@ -24,6 +25,7 @@ public:
   void drop();
   void take(int chips, int card);
   void setName(std::string str);
+  const std::string& getName() const;
   
   void info() const;
 

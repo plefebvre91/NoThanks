@@ -10,21 +10,46 @@
 
 class Deck {
 public:
-  //Constructor/Destructor
+
+  /**
+   * Constructor
+   */
   Deck();
+  
+  /**
+   * Constructor
+   */
   ~Deck();
   
-  //Returns true if all card have been played
-  bool isEmpty();
-
-  //Returns the last removed tile index 
+  /**
+   * \return true if all card have been played
+   */
+  bool isEmpty() const;
+  
+  /**
+   * \return the next card to play
+   */
   const Card& next();
-  const Card& top();
+
+  /**
+   * \return the currently player card
+   */
+  const Card& first();
+
   
 private:
+  /**
+   * Shuffle the indexes array
+   */
   void shuffle();
+
+  // Cards
   Card cards[NOTHX_NB_CARD];
+
+  // Card order after shuffling
   int indexes[NOTHX_NB_CARD];
+  
+  // Index of top-card
   int top;
 };
 

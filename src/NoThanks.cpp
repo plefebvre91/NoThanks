@@ -1,7 +1,10 @@
 #include "NoThanks.hpp"
 
 NoThanks::NoThanks(): cardOnTop(), deck(){
-  srand(time(0));
+  nbPlayers = 2;
+  players = new PlayerHuman[nbPlayers];
+  players[0].setName("Bobiwan");
+  players[1].setName("Liara");
 }
 
 
@@ -17,13 +20,14 @@ void NoThanks::execute(const Action& action, Player& player) {
     if(!player.hasChips())  Logger::get().info("Plus aucun jeton"); 
 
     Logger::get().info("Action Prendre carte et jetons"); 
+    
     // prendre jetons et carte
-    player.take(chipsOnTable,cardOnTop.getValue());
+    player.take(chipsOnTable,deck.first().getValue());
     // Enlever les jetons sur la table
     chipsOnTable = 0;
     
     // tirer une nouvelle carte si possible
-    cardOnTop = deck.getNext();
+    cardOnTop = deck.next();
   }
   
   else if(action == ACT_GIVE_A_CHIP) {
@@ -40,31 +44,27 @@ void NoThanks::execute(const Action& action, Player& player) {
 
 void NoThanks::display() {
   std::cout << "Il y a " << chipsOnTable << " jetons sur la table\n";
-  std::cout << "La carte posee est " << cardOnTop.getValue() << std::endl;
- 
+  for(int i=0;i<nbPlayers; i++){
+    players[i].info();
+  }
 }
 
 bool NoThanks::gameIsFinished() const {
-  return false;
+  return deck.isEmpty();
 }
 
 
 void NoThanks::run(){
   Logger::get().info(NOTHX_TITLE);
   
-  int currentPlayer = 0;
-
-  PlayerHuman *p = new PlayerHuman();
-  Player& player = *p;  
-  player.setName("Bob");
-
   while(!gameIsFinished()) {
+    Player& player = players[currentPlayer]; 
     
-    //Player player = player[i]; 
-    std::cout << "Carte distribuée : " << deck.top().getValue() << "\n";
-    Action action = player.hasChips()? player.play() : ACT_TAKE_CHIPS;
+    std::cout << "Carte distribuée : " << deck.first().getValue() << "\n";
+
+    std::cout << "Au tour de " << player.getName() << " " << std::endl;
+    Action action = player.hasChips()? player.play(deck.first()) : ACT_TAKE_CHIPS;
     execute(action, player);
-    player.info();
     display();
     selectNextPlayer();
   }
@@ -74,5 +74,5 @@ void NoThanks::run(){
 void NoThanks::selectNextPlayer(){
   Logger::get().info("Joueur suivant...");
   currentPlayer++;
-  currentPlayer%=NOTHX_NB_PLAYERS_MAX;
+  currentPlayer%=nbPlayers;
 }
