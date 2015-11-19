@@ -3,13 +3,24 @@
 
 #include <iostream>
 
+/**
+ * Logger class
+ */
+
 class Logger {
 public:
+
+  /**
+   * \return the unique instance of Logger
+   */
   static Logger& get() {
     static Logger logger;
     return logger;
   }
 
+  /**
+   * Displays a message
+   */
   void info(const char* str) const;
   
 private:
