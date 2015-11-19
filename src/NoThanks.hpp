@@ -32,10 +32,12 @@ public:
 
 private:
   bool gameIsFinished() const;
-  void execute(const Action& action);
+  void execute(const Action& action, Player& player);
   void display();  
   void selectNextPlayer();
   
   int currentPlayer;
+  int chipsOnTable;
+  int cardOnTop;
 };
 #endif

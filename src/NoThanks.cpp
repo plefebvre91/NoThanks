@@ -9,16 +9,34 @@ NoThanks::~NoThanks() {
 
 }
 
-void NoThanks::execute(const Action& action) {
-  if(action == ACT_NOTHING)  Logger::get().info("Action rien"); 
-  if(action == ACT_TAKE_CHIPS)  Logger::get().info("Action Prendre"); 
-  if(action == ACT_GIVE_A_CHIP)  Logger::get().info("Action Donner"); 
+void NoThanks::execute(const Action& action, Player& player) {
+  
+  if(!player.hasChips() || action == ACT_TAKE_CHIPS) {
+    if(!player.hasChips())  Logger::get().info("Plus aucun jeton"); 
+
+    player.take(chipsOnTable,cardOnTop);
+    Logger::get().info("Action Prendre carte et jetons"); 
+
+    chipsOnTable = 0;
+  }
+  
+  else if(action == ACT_NOTHING)  {
+    Logger::get().info("Action rien"); 
+  }
+
+  else if(action == ACT_GIVE_A_CHIP) {
+    Logger::get().info("Action Donner"); 
+    player.drop();
+    ++chipsOnTable;
+  }
+
 }
 
 
 void NoThanks::display() {
-  Logger::get().info("display()");
-  Logger::get().info("\n");
+  std::cout << "Il y a " << chipsOnTable << " jetons sur la table\n";
+  std::cout << "La carte posee est " << cardOnTop << std::endl;
+ 
 }
 
 bool NoThanks::gameIsFinished() const {
@@ -33,14 +51,15 @@ void NoThanks::run(){
 
   PlayerHuman *p = new PlayerHuman();
   Player& player = *p;  
-
+  player.setName("Bob");
   while(!gameIsFinished()) {
     
     //Player player = player[i]; 
-    Action action = player.play();
-   
-    execute(action);
-    Logger::get().info("Affichage...");
+    Action action = player.hasChips()? player.play() : ACT_TAKE_CHIPS;
+    
+    execute(action, player);
+    player.info();
+
     display();
     
     selectNextPlayer();
