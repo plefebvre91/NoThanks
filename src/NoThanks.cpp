@@ -61,6 +61,7 @@ void NoThanks::run(){
   while(!gameIsFinished()) {
     
     //Player player = player[i]; 
+    std::cout << "Carte distribuée : " << deck.top().getValue() << "\n";
     Action action = player.hasChips()? player.play() : ACT_TAKE_CHIPS;
     execute(action, player);
     player.info();

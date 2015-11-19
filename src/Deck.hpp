@@ -18,7 +18,8 @@ public:
   bool isEmpty();
 
   //Returns the last removed tile index 
-  const Card& getNext();
+  const Card& next();
+  const Card& top();
   
 private:
   void shuffle();

@@ -17,8 +17,12 @@ bool Deck::isEmpty() {
   return top == (NOTHX_NB_CARD-1);
 }
 
-const Card& Deck::getNext() {
+const Card& Deck::next() {
   return cards[indexes[top++]];
+}
+
+const Card& Deck::top(){
+  return cards[indexes[top]];
 }
 
 void Deck::shuffle() {
