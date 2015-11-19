@@ -4,7 +4,9 @@
 #include <utility>
 #include <ctime>
 #include <cstdlib>
+
 #include "Definitions.hpp"
+#include "Card.hpp"
 
 class Deck {
 public:
@@ -16,12 +18,13 @@ public:
   bool isEmpty();
 
   //Returns the last removed tile index 
-  //  const Card& getNext() const;
-
+  const Card& getNext();
+  
 private:
   void shuffle();
-  int deck[NOTHX_NB_CARD];
-  int topIndex;
+  Card cards[NOTHX_NB_CARD];
+  int indexes[NOTHX_NB_CARD];
+  int top;
 };
 
 #endif

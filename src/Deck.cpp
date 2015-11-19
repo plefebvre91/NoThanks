@@ -2,12 +2,11 @@
 
 Deck::Deck() {
   for(int i=0; i<NOTHX_NB_CARD; i++){
-    deck[i] = i+1;
+    indexes[i] = i;
+    cards[i].setValue(i+3);
   }
   shuffle();
-
-  topIndex = 0;
-
+  top = 0;
 }
 
 Deck::~Deck() {
@@ -15,16 +14,18 @@ Deck::~Deck() {
 }
 
 bool Deck::isEmpty() {
-  return topIndex == (NOTHX_NB_CARD-1);
+  return top == (NOTHX_NB_CARD-1);
 }
 
-
+const Card& Deck::getNext() {
+  return cards[indexes[top++]];
+}
 
 void Deck::shuffle() {
   int randomIndex;
 
-  for(int i=NOTHX_NB_CARD-1; i>1; i--) {
+  for(int i=NOTHX_NB_CARD-1; i>0; i--) {
     randomIndex = std::rand()%(i+1);
-    std::swap(deck[i], deck[randomIndex]);
+    std::swap(indexes[i], indexes[randomIndex]);
   }
 }

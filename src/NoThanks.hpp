@@ -1,6 +1,8 @@
 #ifndef NOTHANKS_HPP
 #define NOTHANKS_HPP
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 #include "Definitions.hpp"
 #include "Player.hpp"
@@ -8,6 +10,7 @@
 #include "Deck.hpp"
 #include "Logger.hpp"
 #include "Action.hpp"
+#include "Card.hpp"
 
 /**
  * Main class
@@ -38,6 +41,11 @@ private:
   
   int currentPlayer;
   int chipsOnTable;
-  int cardOnTop;
+  
+  Card cardOnTop;
+  Deck deck;
+  
+  
+  
 };
 #endif
