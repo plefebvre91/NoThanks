@@ -11,8 +11,7 @@ Action PlayerHuman::play(const Card& card) {
   int a;
   Action action;
   (void)card;
-  std::cout << "1 : prendre la carte et les jetons" << std::endl;
-  std::cout << "2 : donner un jeton" << std::endl;
+  std::cout << "Prendre (1) / Donner (2) ?: ";
 
   while(a!= 1 && a!=2)
     std::cin >> a;

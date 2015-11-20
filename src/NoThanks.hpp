@@ -20,59 +20,66 @@
 
 class NoThanks {
 public:
-   /**
-    * Constructor
-    */
-   NoThanks();
+  /**
+   * Constructor
+   */
+  NoThanks();
 
-   /**
-    * Destructor
-    */
-   ~NoThanks();
+  /**
+   * Destructor
+   */
+  ~NoThanks();
 
-   /**
-    * Main loop
-    */
-   void run();
+  /**
+   * Main loop
+   */
+  void run();
 
- private:
-   /**
-    * \return true if there is no more card in deck
-    */
-   bool gameIsFinished() const;
+private:
+  /**
+   * \return true if there is no more card in deck
+   */
+  bool gameIsFinished() const;
 
-   /**
-    * A player move
-    */
-   void execute(const Action& action, Player& player);
+  /**
+   * A player move
+   */
+  void execute(const Action& action, Player& player);
+  
+  /**
+   * Compute scores
+   */
+  void updateScores();
+  
+  /**
+   * Information about game
+   */
+  void display();  
 
-   /**
-    * Information about game
-    */
-   void display();  
+  /**
+   * Select the next player
+   */
+  void selectNextPlayer();
 
-   /**
-    * Select the next player
-    */
-   void selectNextPlayer();
+  // Current player index
+  int currentPlayer;
 
-   // Current player index
-   int currentPlayer;
+  // Chips put on table
+  int chipsOnTable;
 
-   // Chips put on table
-   int chipsOnTable;
-   int nbPlayers;
+  // Nb of Players
+  int nbPlayers;
   
   // Players scores
-  int score[NOTHX_NB_PLAYERS_MAX];
+  int scores[NOTHX_NB_PLAYERS_MAX];
   
   // Visible card on deck
   Card cardOnTop;
-
+  
   // Deck
   Deck deck;  
   
+  // Players
   Player** players;
-
 };
 #endif

@@ -76,8 +76,26 @@ void NoThanks::run(){
 }
 
 
-void NoThanks::selectNextPlayer(){
+void NoThanks::selectNextPlayer() {
   Logger::get().info("Joueur suivant...");
   currentPlayer++;
   currentPlayer%=nbPlayers;
+}
+
+
+void NoThanks::updateScores() {
+  for(int i=0; i<nbPlayers; i++) {
+    const std::set<int>& cards = players[i]->getCards();
+    
+    auto it = cards.rbegin();  
+    
+    while(it != cards.rend()) {
+      while(cards.find((*it)-1) != cards.end())
+	++it;
+      
+      scores[i]+=*it;
+      ++it;
+    }
+    scores[i] -= players[i]->getNbChips();
+  }
 }

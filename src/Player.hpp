@@ -32,7 +32,7 @@ public:
   /**
    * Getter for cards set
    */
-  int getCards() const;
+  const std::set<int>& getCards() const;
   
   // accesseurs
   /**
