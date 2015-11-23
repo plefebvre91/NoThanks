@@ -8,7 +8,7 @@ PlayerHuman::~PlayerHuman() {
 
 
 Action PlayerHuman::play(const Card& card) {
-  int a;
+  int a = 0;
   Action action;
   (void)card;
   std::cout << "Prendre (1) / Donner (2) ?: ";
@@ -19,6 +19,7 @@ Action PlayerHuman::play(const Card& card) {
   switch(a){
   case 1: action = ACT_TAKE_CHIPS; break;
   case 2: action = ACT_GIVE_A_CHIP; break;
+  default: action = ACT_GIVE_A_CHIP; break;
   }
   return action;
 }

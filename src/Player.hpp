@@ -56,7 +56,7 @@ public:
   void take(int chips, int card);
 
   /**
-   * Setter for player name
+   * \brief Setter for player name
    */
   void setName(std::string str);
 

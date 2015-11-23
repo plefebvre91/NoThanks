@@ -1,12 +1,19 @@
 #include "NoThanks.hpp"
 
-NoThanks::NoThanks(): cardOnTop(), deck(){
+NoThanks::NoThanks(): currentPlayer(0),
+		      chipsOnTable(0),
+		      cardOnTop(),
+		      deck() {
   nbPlayers = 2;
   players= new Player*[nbPlayers];
-  players[0] = new PlayerHuman();
+  players[0] = new PlayerRandom();//PlayerHuman();
   players[1] = new PlayerRandom();
   players[0]->setName("Bobiwan");
   players[1]->setName("Liara");
+
+  for(int i=0; i<NOTHX_NB_PLAYERS_MAX; i++){
+    scores[i] = 0;
+  }
 }
 
 
@@ -73,6 +80,8 @@ void NoThanks::run(){
     display();
     selectNextPlayer();
   }
+  updateScores();
+  showScores();
 }
 
 
@@ -97,5 +106,11 @@ void NoThanks::updateScores() {
       ++it;
     }
     scores[i] -= players[i]->getNbChips();
+  }
+}
+
+void NoThanks::showScores() const {  
+  for(int i=0; i<nbPlayers; i++) {
+    std::cout << players[i]->getName() << ": " << scores[i] << std::endl;
   }
 }

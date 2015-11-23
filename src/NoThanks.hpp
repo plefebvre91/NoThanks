@@ -61,6 +61,12 @@ private:
    */
   void selectNextPlayer();
 
+  /**
+   * Show players scores
+   */
+  void showScores() const;
+
+
   // Current player index
   int currentPlayer;
 
