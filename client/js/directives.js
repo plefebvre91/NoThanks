@@ -15,3 +15,21 @@ app.directive('playerInfo', function() {
     };
 });
 
+
+/**
+ * Angular directive for scores display
+ */
+app.directive('playerScore', function() {
+    return {
+	restrict : 'E',
+	controller : 'GameCreationCtrl',
+	replace: true,
+	transclude: true,
+	scope: {
+	    name: '@',
+	    score: '@'
+	},
+	templateUrl : './templates/player-score.html'
+    };
+});
+

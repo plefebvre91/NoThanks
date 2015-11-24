@@ -44,6 +44,17 @@ app.controller('GameCreationCtrl',
 
 
 /**
+ * Menu controller
+ */
+app.controller('ScoresMenuCtrl', 
+	       ['$scope',
+		function($scope) {
+		    
+		}
+	       ]);
+
+
+/**
  * Remove last player
  */
 function removePlayer() {
