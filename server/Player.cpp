@@ -45,3 +45,9 @@ void Player::info() const {
   }
 }
 
+bool Player::adjacentCardIsFound(const Card& card) const {
+  std::set<int>::iterator pred = cards.find(card.getValue() - 1);
+  std::set<int>::iterator succ = cards.find(card.getValue() + 1);
+					    
+  return (pred != cards.end() || succ != cards.end());
+}

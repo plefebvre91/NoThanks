@@ -4,14 +4,20 @@ NoThanks::NoThanks(): currentPlayer(0),
 		      chipsOnTable(0),
 		      cardOnTop(),
 		      deck() {
-  nbPlayers = 2;
+  nbPlayers = 5;
   players= new Player*[nbPlayers];
-  players[0] = new PlayerRandom();//PlayerHuman();
-  players[1] = new PlayerRandom();
+  
+  for(int i=0; i<nbPlayers; i++){
+    players[i] = new PlayerAverage();
+  }
+  
   players[0]->setName("Bobiwan");
   players[1]->setName("Liara");
+  players[2]->setName("Karl");
+  players[3]->setName("Robby");
+  players[4]->setName("Yush");
 
-  for(int i=0; i<NOTHX_NB_PLAYERS_MAX; i++){
+  for(int i=0; i<nbPlayers; i++){
     scores[i] = 0;
   }
 }

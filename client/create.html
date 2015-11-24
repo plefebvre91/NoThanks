@@ -9,93 +9,35 @@
     
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-
+    <script src="js/angular.min.js"></script>
   </head>
-  <body>
+  <body ng-app="NoThanksApp">
     <div class="container" id="main">
-      <div class="row">
+      
+      <div class="row" ng-controller="MenuCtrl">
 	<div class="col-md-12">
-	  <h1>NoThanks! App v1.0!</h1>
-	  <h2>Créer une partie</h2>
-	</div>
-	<div class="row">
-	  
-	  <div class="col-sm-6 col-md-2">
-	    <div class="thumbnail">
-	      <img src="resources/img/th.png">
-	      <div class="caption">
-		<h3>Joueur</h3>
-		<p>Bob</p>
-		<p><a href="#" class="btn btn-default" role="button">Jouer</a></p>
-	      </div>
-	    </div>
-	  </div>
-
-	  <div class="col-sm-6 col-md-2">
-	    <div class="thumbnail">
-	      <img src="resources/img/th.png">
-	      <div class="caption">
-		<h3>Joueur</h3>
-		<p>Bob</p>
-		<p><a href="#" class="btn btn-default" role="button">Jouer</a></p>
-	      </div>
-	    </div>
-	  </div>
-
-	  <div class="col-sm-6 col-md-2">
-	    <div class="thumbnail">
-	      <img src="resources/img/th.png">
-	      <div class="caption">
-		<h3>Joueur</h3>
-		<p>Bob</p>
-		<p><a href="#" class="btn btn-default" role="button">Jouer</a></p>
-	      </div>
-	    </div>
-	  </div>
-
-	  <div class="col-sm-6 col-md-2">
-	    <div class="thumbnail">
-	      <img src="resources/img/th.png">
-	      <div class="caption">
-		<h3>Joueur</h3>
-		<p>Bob</p>
-		<p><a href="#" class="btn btn-default" role="button">Jouer</a></p>
-	      </div>
-	    </div>
-	  </div>
-
-	  <div class="col-sm-6 col-md-2">
-	    <div class="thumbnail">
-	      <img src="resources/img/th.png">
-	      <div class="caption">
-		<h3>Joueur</h3>
-		<p>Bob</p>
-		<p><a href="#" class="btn btn-default" role="button">Jouer</a></p>
-	      </div>
-	    </div>
-	  </div>
-
-
-	  <button id="btn-create-game">OK</button>
-
-
-	  <div class="row">
-	    <img src="resources/img/coin.png">
-	  </div>
-
-
-
+	  <h1>{{ title }}</h1>
+	  <h2><small>{{ subtitle }}<small></h2>
 	</div>
       </div>
-    </div>
-    
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="js/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/websocket.js"></script>
-    <script src="js/create.js"></script>
-    <script src="js/event.js"></script>
 
+      <div  ng-controller="GameCreationCtrl">
+	<div class="row">
+	  <div ng-repeat="player in players">
+	    <player-info name="{{ player.name }}" type="{{ player.type}}"></player-info>
+	  </div>
+	</div>
+	
+	<a href="#" class="btn btn-primary" ng-click="addPlayer('Computer');">Ajouter ordi</a>
+	<a href="#" class="btn btn-primary" ng-click="addPlayer('Human');" id="btn-add-player">Ajouter humain</a>
+	<a href="#" class="btn btn-primary" ng-click="removePlayer();" id="btn-remove-player">Effacer joueur</a>
+	<a href="#" class="btn btn-primary" ng-click="createGame();" id="btn-create-game">Créer une partie</a>
+      </div>
+      
+      <script src="js/jquery.min.js"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script src="js/websocket.js"></script>
+      <script src="js/create.js"></script>
+<!--      <script src="js/event.js"></script>-->
   </body>
 </html>

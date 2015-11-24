@@ -70,9 +70,12 @@ public:
    */
   void info() const;
 
+protected:
+  std::set<int> cards;
+  bool adjacentCardIsFound(const Card& card) const;
+
 private:
   int chips;
-  std::set<int> cards;
   std::string name;
 };
 

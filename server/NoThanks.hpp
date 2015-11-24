@@ -9,6 +9,7 @@
 #include "Player.hpp"
 #include "PlayerHuman.hpp"
 #include "PlayerRandom.hpp"
+#include "PlayerAverage.hpp"
 #include "Deck.hpp"
 #include "Logger.hpp"
 #include "Action.hpp"
