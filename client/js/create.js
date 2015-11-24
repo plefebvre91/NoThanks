@@ -1,5 +1,13 @@
+/**
+ * Angular application
+ */
+
 var app = angular.module('NoThanksApp', []);
 
+
+/**
+ * Menu controller
+ */
 app.controller('MenuCtrl', ['$scope',
     function($scope) {
 	$scope.title = 'NoThanksApp 1.0';
@@ -7,73 +15,70 @@ app.controller('MenuCtrl', ['$scope',
     }
 ]);
 
-var names = ['Bob', 'Dylan', 'Margarett', 'Alex', 'Robert'];
+/**
+ * Players names list
+ */
+var names = ['Ahmed', 'Lisa', 'Leo', 'Francoise', 'Astrid'];
 
+/**
+ * Players list
+ */
 var players = [
-    {name: 'Bob',       type: 'Human'},
-    {name: 'Dylan',     type: 'Human'},
+    {name: 'Ahmed',       type: 'Human'},
+    {name: 'Lisa',     type: 'Human'},
 ];
 
-
+/**
+ * Game creation module controller
+ */
 app.controller('GameCreationCtrl', 
 	       ['$scope',
 		
 		function($scope) {
-		    $scope.title = 'NoThanksApp 1.0';
-		    $scope.nbPlayers = 0;
 		    $scope.players = players;
-		    
 		    $scope.addPlayer = addPlayer;
-		    
 		    $scope.removePlayer = removePlayer;		    
 		    $scope.createGame = createGame;
 		}]);
 
 
 
-app.directive('playerInfo', function() {
-    return {
-	restrict : 'E',
-	controller : 'GameCreationCtrl',
-	replace: true,
-	transclude: true,
-	scope: {
-	    name: '@',
-	    type: '@'
-	},
-	templateUrl : './templates/player-info.html'
-    };
-});
-
-
+/**
+ * Remove last player
+ */
 function removePlayer() {
     if(players.length <=2) {
 	return;
     }
     players.pop();
+
     return false;
-    console.log($scope.players);
 };
 
 
+/**
+ * Add a new player
+ * \param type 'Computer' or 'Human'
+ */
 function addPlayer(type) {
     if(players.length >= 5) {
 	return;
     }
     
+    // Creates new player
     var p = new Object();
     p.name = names[players.length];
     p.type = type;
+    
+    // Add to the players list
     players.push(p);
 
     return false;
-    console.log($scope.players);
 };
 
 
 
 function createGame(){
-    
     var data = '{"players":' + angular.toJson(players)+'}';
     
     ws.send(data);

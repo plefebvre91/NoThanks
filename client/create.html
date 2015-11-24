@@ -4,12 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Create a game</title>
+    
+    <title>No Thanks!</title>
     
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="js/angular.min.js"></script>
+    
   </head>
   <body ng-app="NoThanksApp">
     <div class="container" id="main">
@@ -28,16 +29,18 @@
 	  </div>
 	</div>
 	
-	<a href="#" class="btn btn-primary" ng-click="addPlayer('Computer');">Ajouter ordi</a>
-	<a href="#" class="btn btn-primary" ng-click="addPlayer('Human');" id="btn-add-player">Ajouter humain</a>
-	<a href="#" class="btn btn-primary" ng-click="removePlayer();" id="btn-remove-player">Effacer joueur</a>
-	<a href="#" class="btn btn-primary" ng-click="createGame();" id="btn-create-game">Créer une partie</a>
+	<div class="btn-group">
+	<a href="#" ng-show="players.length<5" class="btn btn-primary" ng-click="addPlayer('Computer');">Ajouter ordi</a>
+	<a href="#" ng-show="players.length<5" class="btn btn-primary" ng-click="addPlayer('Human');" id="btn-add-player">Ajouter humain</a>
+	<a href="#" ng-show="players.length>2" class="btn btn-warning" ng-click="removePlayer();" id="btn-remove-player">Effacer joueur</a>
+	<a href="#" class="btn btn-success" ng-click="createGame();" id="btn-create-game">Créer une partie</a>
       </div>
-      
+      </div>
       <script src="js/jquery.min.js"></script>
       <script src="js/bootstrap.min.js"></script>
       <script src="js/websocket.js"></script>
+
       <script src="js/create.js"></script>
-<!--      <script src="js/event.js"></script>-->
+      <script src="js/directives.js"></script>
   </body>
 </html>
