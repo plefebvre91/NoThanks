@@ -10,8 +10,8 @@ var app = angular.module('NoThanksApp', []);
  */
 app.controller('MenuCtrl', ['$scope',
     function($scope) {
-	$scope.title = 'NoThanksApp 1.0';
-	$scope.subtitle = 'Create a game';
+	$scope.title = 'No Thanks!';
+	$scope.subtitle = 'Version 1.0 for Mobile and Desktop';
     }
 ]);
 
@@ -28,6 +28,12 @@ var players = [
     {name: 'Lisa',     type: 'Human'},
 ];
 
+var ra = [3];
+for(i=4;i<7;i++){
+    ra.push(i);
+}
+
+console.log(ra);
 /**
  * Game creation module controller
  */
@@ -39,6 +45,7 @@ app.controller('GameCreationCtrl',
 		    $scope.addPlayer = addPlayer;
 		    $scope.removePlayer = removePlayer;		    
 		    $scope.createGame = createGame;
+		    $scope.r = ra;
 		}]);
 
 

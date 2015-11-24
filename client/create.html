@@ -12,21 +12,23 @@
     <script src="js/angular.min.js"></script>
     
   </head>
+  
   <body ng-app="NoThanksApp">
-    <div class="container">
-
+    <div class="container-fluid">
+      
       <div class="row" ng-controller="MenuCtrl">
 	<div class="col-md-12">
 	  <h1>{{ title }}</h1>
-	  <h2><small>{{ subtitle }}<small></h2>
+	  <h2><small>{{ subtitle }}</small></h2>
 	</div>
       </div>
       
       <div id="main">
-	<div  ng-controller="GameCreationCtrl">
+	<div ng-controller="GameCreationCtrl">
+	  <h2><small>Créer une partie</small></h2>
 	  <div class="row">
 	    <div ng-repeat="player in players">
-	      <player-info name="{{ player.name }}" type="{{ player.type}}"></player-info>
+	      <player-info name="{{player.name}}" title="{{ player.type }}" subtitle="{{ player.name}}"></player-info>
 	    </div>
 	  </div>
 	  
@@ -37,26 +39,55 @@
 	    <a href="#" class="btn btn-success" ng-click="createGame();" id="btn-create-game">Créer une partie</a>
 	  </div>
 	</div>
-
-
+      </div>
 	
-	<div class="row">
+      
+      <div class="row">
+	<div class="col-md-12">
 	  <h2><small>Scores</small></h2>
-	  <player-score name="Lisa" score="123"></player-score>
-	  <player-score name="Ahmed" score="76"></player-score>
-	  <player-score name="Astrid" score="13"></player-score>
-	  <player-score name="Francoise" score="151"></player-score>
-	  <player-score name="Leo" score="151"></player-score>
+	  <player-info  name="Lisa" title="Lisa" subtitle="123"></player-info>
+	  <player-info  name="Ahmed" title="Ahmed" subtitle="76"></player-info>
+	  <player-info  name="Astrid" title="Astrid" subtitle="13"></player-info>
+	  <player-info  name="Francoise" title="Francoise" subtitle="151"></player-info>
+	  <player-info  name="Leo" title="Leo" subtitle="151"></player-info>
+	</div>
+      </div>
+      
+
+      <div class="panel panel-default">
+	<div class="panel-heading">
+	  <h3 class="panel-title">À vous de jouer !</h3>
+	</div>
+	<div class="panel-body">
+	  <div class="col-md-1">
+	    <img src="resources/img/characters/Ahmed.png">
+	    <h4 class="text-center"><small>Joueur</small><br/>Theo</h4>
+	    <h4 class="text-center"><small>Points</small><br/>216</h4>
+	    <h4 class="text-center"><small>Jetons</small><br/>12</h4>
+	  </div>
 	</div>
 
       </div>
-      
-      <script src="js/jquery.min.js"></script>
-      <script src="js/bootstrap.min.js"></script>
-      <script src="js/websocket.js"></script>
+    </div>
+    
 
-      <script src="js/create.js"></script>
-      <script src="js/directives.js"></script>
+  <div class="col-md-9 media-middle">
+	    <div ng-controller="GameCreationCtrl" >
+	      <div ng-repeat="n in r">
+		<div class="col-md-1">
+		  <img src="./resources/img/cards/{{n}}.png">
+		</div>
+	      </div>
+	    </div>
+	  </div>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/websocket.js"></script>
+    
+    <script src="js/create.js"></script>
+    <script src="js/directives.js"></script>
     </div>
   </body>
 </html>
