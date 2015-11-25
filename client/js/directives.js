@@ -8,6 +8,7 @@ app.directive('playerInfo', function() {
 	replace: true,
 	transclude: true,
 	scope: {
+	    head: '@',
 	    title: '@',
 	    subtitle: '@',
 	    name: '@'

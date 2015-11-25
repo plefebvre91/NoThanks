@@ -14,115 +14,114 @@
   </head>
   
   <body ng-app="NoThanksApp">
-    <div class="container-fluid">
+    <div class="container-fluid" ng-controller="GameCreationCtrl">
       
+      <!-- App title -->
       <div class="row" ng-controller="MenuCtrl">
 	<div class="col-md-12">
 	  <h1>{{ title }}<br/><small>{{ subtitle }}</small></h1>
 	</div><!--col-md-12-->
       </div><!--row-->
       
-      <div ng-controller="GameCreationCtrl">
-	<div id="main" ng-show="showCreateGameScreen">
-	  <h2><small>Créer une partie</small></h2>
-	  <div class="row">
-	    <div ng-repeat="player in players">
-	      <player-info name="{{player.name}}"
-			   title="{{ player.type }}" 
-			   subtitle="{{ player.name}}"></player-info>
-	    </div><!--ng-reapeat-->
-	  </div><!--row-->
+
+      <!-- Game creation screen -->
+      <div ng-show="showCreationScreen">
+	<h2><small>Créer une partie</small></h2>
+	<div class="row">
+	  <div ng-repeat="player in players">
+	    <player-info name="{{player.name}}"
+			 title="{{ player.type }}" 
+			 subtitle="{{ player.name}}"></player-info>
+	  </div><!--ng-reapeat-->
+	</div><!--row-->
+	
+	<div class="btn-group">
+	  <button class="btn btn-primary"
+		  ng-show="players.length<5" 
+		  ng-click="addPlayer('Computer');">
+	    Ajouter ordi
+	  </button>
 	  
-	  <div class="btn-group">
-	    <a href="#" 
-	       ng-show="players.length<5"
-	       class="btn btn-primary"
-	       ng-click="addPlayer('Computer');">Ajouter ordi</a>
-
-	    <a href="#"
-	       ng-show="players.length<5"
-	       class="btn btn-primary"
-	       ng-click="addPlayer('Human');">Ajouter humain</a>
-
-	    <a href="#"
-	       ng-show="players.length>2"
-	       class="btn btn-warning"
-	       ng-click="removePlayer();">Effacer joueur</a>
-
-	    <a href="#" 
-	       class="btn btn-success"
-	       ng-click="createGame();">Créer une partie</a>
-	  </div><!--btn-group-->
-	</div><!--main-->
+	  <button class="btn btn-primary"
+		  ng-show="players.length<5"
+		  ng-click="addPlayer('Human');">
+	    Ajouter humain
+	  </button>
+	  
+	  <button  class="btn btn-warning"
+		   ng-show="players.length>2"
+		   ng-click="removePlayer();">
+	    Effacer joueur
+	  </button>
+	  
+	  <button class="btn btn-success"
+		  ng-click="createGame();">
+	    Créer une partie
+	  </button>
+	</div><!--btn-group-->
       </div><!--ng-controller-->
       
       
-      <div ng-controller="GameCreationCtrl">
-	<div class="row" ng-show="showScoresScreen">
+      <!-- Liste des joueurs dans le jeu -->
+      <div ng-show="showGameScreen">
+	<div ng-repeat="player in players">
+	  <player-info head="{{ player.name }}"
+		       title="Jetons" 
+		       subtitle="{{ player.coins }}"
+		       name="{{ player.name }}">
+	  </player-info>
+	</div>
+      </div>
+      
+      <div ng-show="showScoresScreen">
+	<div class="row">
 	  <div class="col-md-12">
 	    <h2><small>Scores</small></h2>
 	    <div ng-repeat="player in players">
-	      <player-info name="{{player.name}}"
+	      <player-info name="{{ player.name }}"
 			   title="{{ player.type }}" 
-			   subtitle="{{ player.score}}"></player-info>
+			   subtitle="{{ player.score }}"></player-info>
 	    </div><!--ng-reapeat-->
 	  </div><!--col-md-12-->
 	</div><!--row-->
-      </div><!--controller-->
+      </div><!--ng-show-->
       
-
-      <div class="row" class="game-screen">
-	<div ng-controller="GameCreationCtrl">
-	  <div class="col-sm-6 col-md-2">
-	    <div class="thumbnail">
-	      <img src="resources/img/cards/23.png" alt="23">
-	      <div class="text-center caption">
-		<h3>Carte tirée</h3>
+      
+      <div ng-show="showGameScreen" class="col-md-12">
+	<div class="panel panel-default">
+	  <div class="panel-body">
+	    <div class="col-md-2 text-center">
+<!--	      <div class="thumbnail alert-info">-->
+		<img src="resources/img/cards/23.png" alt="23">
+		<div class="text-center">
+		  <h3>Carte tirée</h3>
 		  <div class="btn-group">
 		    <a href="#" class="btn btn-success">Prendre</a> 
 		    <a href="#" class="btn btn-danger">Donner</a>
 		  </div><!--btn-group-->
-	      </div><!--caption-->
-	    </div><!--thumbnail-->
-	  </div><!--col du thumbnail-->
-	</div><!--ng-controller-->
-      </div><!--row-->
-
-      
-      <div class="panel panel-default game-screen">
-	<div class="panel-heading">
-	  <h3 class="panel-title"><b>Théo</b>, à vous de jouer !</h3>
-	</div><!--heading-->
-
-	<div class="panel-body">
-	  <div class="col-md-1 center-block">
-	    <img src="resources/img/characters/Lisa.png">
-	  </div><!--col-md-1-->
-	  <div class="col-md-1">
-	    <h2 class="text-center"><small>Points</small><br/>216</h2>
-	    <h2 class="text-center"><small>Jetons</small><br/>12</h2>
-	  </div><!--col-md-1-->
-	  
-	  <div class="col-md-6">
-	    <div ng-controller="GameCreationCtrl" >
+		</div><!--caption-->
+<!--	      </div><!--thumbnail-->
+	    </div><!--col-md-2-->
+	    
+	    <div class="col-md-6">
 	      <div ng-repeat="n in r">
 		<div class="col-md-1">
 		  <img src="./resources/img/cards/{{n}}.png">
 		</div><!--col-md-1-->
 	      </div><!--ngrepeat-->
-	    </div><!--controller-->
-	  </div><!-- div md6-->
-	</div><!--panel-body-->
-      </div><!--panel-->
+	    </div><!-- div md6-->
+	  </div><!--panel-body-->
+	</div><!--panel-->
+      </div><!--col-md-12 a supprimer a la fin-->
     </div><!--container-->
     
-
+    
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/websocket.js"></script>
     
     <script src="js/create.js"></script>
+    <script src="js/app.js"></script>
     <script src="js/directives.js"></script>
-    </div>
   </body>
 </html>
