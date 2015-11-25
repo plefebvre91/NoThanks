@@ -7,6 +7,9 @@
 #include "Logger.hpp"
 #include "Action.hpp"
 #include "Card.hpp"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
 
 /**
  * Player abstract class
@@ -70,10 +73,20 @@ public:
    */
   void info() const;
 
+  /**
+   * Setter for score
+   */
+  void setScore(int s);
+  
+  /**
+   * Convert player information into a JSON String
+   */
+  std::string toJson() const;
+  
 protected:
   std::set<int> cards;
   bool adjacentCardIsFound(const Card& card) const;
-
+  int score;
 private:
   int chips;
   std::string name;

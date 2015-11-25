@@ -28,7 +28,7 @@ function addPlayer(playersArray, playersNames, type) {
     p.type = type;
     p.score = 0;
     p.coins = 11;
-
+    p.cards = [];
     // Add to the players list
     playersArray.push(p);
 

@@ -83,7 +83,9 @@ void NoThanks::run(){
     std::cout << "Au tour de " << player.getName() << " " << std::endl;
     Action action = player.hasChips()? player.play(deck.first()) : ACT_TAKE_CHIPS;
     execute(action, player);
+    updateScores();
     display();
+
     selectNextPlayer();
   }
   updateScores();
@@ -112,6 +114,7 @@ void NoThanks::updateScores() {
       ++it;
     }
     scores[i] -= players[i]->getNbChips();
+    players[i]->setScore(scores[i]);
   }
 }
 
@@ -120,3 +123,5 @@ void NoThanks::showScores() const {
     std::cout << players[i]->getName() << ": " << scores[i] << std::endl;
   }
 }
+
+

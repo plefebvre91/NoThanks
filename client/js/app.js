@@ -42,13 +42,15 @@ app.controller('GameCreationCtrl',
 			    name: $scope.names[0], 
 			    type: TYPE_HUMAN, 
 			    score:0, 
-			    coins:11
+			    coins:11,
+			    cards: [15,10,31]
 			},
 			{
 			    name: $scope.names[1],
 			    type: TYPE_HUMAN,
 			    score:0,
-			    coins:11
+			    coins:11,
+			    cards: [11,21,13]
 			}];
 		    
 		    // Add a new player
@@ -56,6 +58,14 @@ app.controller('GameCreationCtrl',
 			addPlayer($scope.players, $scope.names, type);
 		    };
 
+		    $scope.currentPlayer = $scope.players[0];
+		    $scope.playerIndex = 0;
+		    $scope.nextPlayer = function(){
+			$scope.playerIndex++;
+			$scope.playerIndex %= $scope.players.length;
+			$scope.currentPlayer = $scope.players[$scope.playerIndex];
+			return false;
+		    };
 		    
 		    // Remove the last player
 		    $scope.removePlayer = function() {

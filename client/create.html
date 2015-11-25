@@ -94,9 +94,10 @@
 <!--	      <div class="thumbnail alert-info">-->
 		<img src="resources/img/cards/23.png" alt="23">
 		<div class="text-center">
-		  <h3>Carte tirée</h3>
+		  <p>Carte tirée</p>
 		  <div class="btn-group">
-		    <a href="#" class="btn btn-success">Prendre</a> 
+		    <a href="#" class="btn btn-success" 
+		       ng-click="nextPlayer()">Prendre</a> 
 		    <a href="#" class="btn btn-danger">Donner</a>
 		  </div><!--btn-group-->
 		</div><!--caption-->
@@ -104,7 +105,7 @@
 	    </div><!--col-md-2-->
 	    
 	    <div class="col-md-6">
-	      <div ng-repeat="n in r">
+	      <div ng-repeat="n in currentPlayer.cards">
 		<div class="col-md-1">
 		  <img src="./resources/img/cards/{{n}}.png">
 		</div><!--col-md-1-->

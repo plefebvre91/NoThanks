@@ -1,5 +1,7 @@
 #include "Player.hpp"
 
+using namespace rapidjson;
+
 Player::Player():cards(),name() {
   chips = NOTHX_NB_CHIPS;
 }
@@ -43,6 +45,7 @@ void Player::info() const {
   for(auto c : cards) {
     std::cout << c << " - ";
   }
+  std::cout << "JSON:" << toJson() << std::endl;
 }
 
 bool Player::adjacentCardIsFound(const Card& card) const {
@@ -50,4 +53,37 @@ bool Player::adjacentCardIsFound(const Card& card) const {
   std::set<int>::iterator succ = cards.find(card.getValue() + 1);
 					    
   return (pred != cards.end() || succ != cards.end());
+}
+
+
+void Player::setScore(int s) {
+  score = s;
+}
+
+std::string Player::toJson() const {  
+  StringBuffer s;
+  Writer<StringBuffer> writer(s);
+  
+  writer.StartObject();
+  
+  writer.String(JSON_KEY_NAME);
+  writer.String(name.c_str());
+
+  writer.String(JSON_KEY_SCORE);
+  writer.Uint(score);
+  
+  writer.String(JSON_KEY_COINS);
+  writer.Uint(chips);
+  
+  writer.String(JSON_KEY_CARDS);
+  
+  writer.StartArray();
+  for (auto card : cards) {
+    writer.Uint(card);
+  }
+  writer.EndArray();
+
+  writer.EndObject();
+  
+  return s.GetString();
 }
