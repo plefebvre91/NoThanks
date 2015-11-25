@@ -35,9 +35,11 @@ void NoThanks::execute(const Action& action, Player& player) {
   // prendre les jetons sur la table
   if(action == ACT_TAKE_CHIPS) {
     // Preciser si on a pas le choix
-    if(!player.hasChips())  Logger::get().info("Plus aucun jeton"); 
-
-    Logger::get().info("Action Prendre carte et jetons"); 
+    if(!player.hasChips()) {
+      Logger::get().info("Plus aucun jeton"); 
+    }
+    
+    Logger::get().info("Action: prendre la carte et les jetons"); 
     
     // prendre jetons et carte
     player.take(chipsOnTable,deck.first().getValue());
@@ -49,7 +51,7 @@ void NoThanks::execute(const Action& action, Player& player) {
   }
   
   else if(action == ACT_GIVE_A_CHIP) {
-    Logger::get().info("Action Donner"); 
+    Logger::get().info("Action: donner un jeton"); 
     // poser un jeton
     player.drop();
 
@@ -61,7 +63,8 @@ void NoThanks::execute(const Action& action, Player& player) {
 
 
 void NoThanks::display() {
-  std::cout << "Il y a " << chipsOnTable << " jetons sur la table\n";
+  Logger::get().info("Jetons sur table:"+std::to_string(chipsOnTable));
+
   for(int i=0;i<nbPlayers; i++){
     players[i]->info();
   }
@@ -77,11 +80,14 @@ void NoThanks::run(){
   
   while(!gameIsFinished()) {
     Player& player = *players[currentPlayer]; 
+    Logger::get().info("Carte distribuee:"+
+			 std::to_string(deck.first().getValue()));
     
-    std::cout << "Carte distribuée : " << deck.first().getValue() << "\n";
+    Logger::get().info("Au tour de " + player.getName());
 
-    std::cout << "Au tour de " << player.getName() << " " << std::endl;
-    Action action = player.hasChips()? player.play(deck.first()) : ACT_TAKE_CHIPS;
+    Action action = player.hasChips()? 
+      player.play(deck.first()) : ACT_TAKE_CHIPS;
+
     execute(action, player);
     updateScores();
     display();
@@ -120,7 +126,9 @@ void NoThanks::updateScores() {
 
 void NoThanks::showScores() const {  
   for(int i=0; i<nbPlayers; i++) {
-    std::cout << players[i]->getName() << ": " << scores[i] << std::endl;
+    Logger::get().info(players[i]->getName()
+		       +": "
+		       +std::to_string(scores[i]));
   }
 }
 

@@ -22,7 +22,13 @@ public:
    * Displays a message
    */
   void info(const char* str) const;
-  
+  void info(std::string str) const;
+
+  /**
+   * Displays a message
+   */
+
+    
 private:
   Logger();
   Logger(const Logger&);
