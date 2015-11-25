@@ -24,12 +24,12 @@ var names = ['Ahmed', 'Lisa', 'Leo', 'Francoise', 'Astrid'];
  * Players list
  */
 var players = [
-    {name: 'Ahmed',       type: 'Human'},
-    {name: 'Lisa',     type: 'Human'},
+    {name: 'Ahmed', type: 'Human', score:0, coins:11},
+    {name: 'Lisa',  type: 'Human', score:0, coins:11},
 ];
 
 var ra = [3];
-for(i=4;i<7;i++){
+for(i=4;i<26;i++){
     ra.push(i);
 }
 
@@ -46,9 +46,15 @@ app.controller('GameCreationCtrl',
 		    $scope.removePlayer = removePlayer;		    
 		    $scope.createGame = createGame;
 		    $scope.r = ra;
+		    $scope.showScoresScreen = false;
+		    $scope.showGameScreen = false;
+		    $scope.showCreateGameScreen = true;
 		}]);
 
 
+
+
+$(".game-screen").hide();
 
 /**
  * Menu controller
@@ -87,7 +93,9 @@ function addPlayer(type) {
     var p = new Object();
     p.name = names[players.length];
     p.type = type;
-    
+    p.score = 0;
+    p.coins = 11;
+
     // Add to the players list
     players.push(p);
 
@@ -104,8 +112,13 @@ function createGame(){
     console.log(data);
 
     $("#main").animate({opacity: 0.0}, 1000, function() {});
+    
+    $(".game-screen").animate({opacity: 0.0}, 1000, function() {});
+
+
     var audio = new Audio('resources/sound/sound.mp3');
     audio.play();
+        
     return false;
 }
 

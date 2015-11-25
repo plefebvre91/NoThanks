@@ -18,69 +18,104 @@
       
       <div class="row" ng-controller="MenuCtrl">
 	<div class="col-md-12">
-	  <h1>{{ title }}</h1>
-	  <h2><small>{{ subtitle }}</small></h2>
-	</div>
-      </div>
+	  <h1>{{ title }}<br/><small>{{ subtitle }}</small></h1>
+	</div><!--col-md-12-->
+      </div><!--row-->
       
-      <div id="main">
-	<div ng-controller="GameCreationCtrl">
+      <div ng-controller="GameCreationCtrl">
+	<div id="main" ng-show="showCreateGameScreen">
 	  <h2><small>Créer une partie</small></h2>
 	  <div class="row">
 	    <div ng-repeat="player in players">
-	      <player-info name="{{player.name}}" title="{{ player.type }}" subtitle="{{ player.name}}"></player-info>
-	    </div>
-	  </div>
+	      <player-info name="{{player.name}}"
+			   title="{{ player.type }}" 
+			   subtitle="{{ player.name}}"></player-info>
+	    </div><!--ng-reapeat-->
+	  </div><!--row-->
 	  
 	  <div class="btn-group">
-	    <a href="#" ng-show="players.length<5" class="btn btn-primary" ng-click="addPlayer('Computer');">Ajouter ordi</a>
-	    <a href="#" ng-show="players.length<5" class="btn btn-primary" ng-click="addPlayer('Human');" id="btn-add-player">Ajouter humain</a>
-	    <a href="#" ng-show="players.length>2" class="btn btn-warning" ng-click="removePlayer();" id="btn-remove-player">Effacer joueur</a>
-	    <a href="#" class="btn btn-success" ng-click="createGame();" id="btn-create-game">Créer une partie</a>
-	  </div>
-	</div>
-      </div>
-	
+	    <a href="#" 
+	       ng-show="players.length<5"
+	       class="btn btn-primary"
+	       ng-click="addPlayer('Computer');">Ajouter ordi</a>
+
+	    <a href="#"
+	       ng-show="players.length<5"
+	       class="btn btn-primary"
+	       ng-click="addPlayer('Human');">Ajouter humain</a>
+
+	    <a href="#"
+	       ng-show="players.length>2"
+	       class="btn btn-warning"
+	       ng-click="removePlayer();">Effacer joueur</a>
+
+	    <a href="#" 
+	       class="btn btn-success"
+	       ng-click="createGame();">Créer une partie</a>
+	  </div><!--btn-group-->
+	</div><!--main-->
+      </div><!--ng-controller-->
       
-      <div class="row">
-	<div class="col-md-12">
-	  <h2><small>Scores</small></h2>
-	  <player-info  name="Lisa" title="Lisa" subtitle="123"></player-info>
-	  <player-info  name="Ahmed" title="Ahmed" subtitle="76"></player-info>
-	  <player-info  name="Astrid" title="Astrid" subtitle="13"></player-info>
-	  <player-info  name="Francoise" title="Francoise" subtitle="151"></player-info>
-	  <player-info  name="Leo" title="Leo" subtitle="151"></player-info>
-	</div>
-      </div>
+      
+      <div ng-controller="GameCreationCtrl">
+	<div class="row" ng-show="showScoresScreen">
+	  <div class="col-md-12">
+	    <h2><small>Scores</small></h2>
+	    <div ng-repeat="player in players">
+	      <player-info name="{{player.name}}"
+			   title="{{ player.type }}" 
+			   subtitle="{{ player.score}}"></player-info>
+	    </div><!--ng-reapeat-->
+	  </div><!--col-md-12-->
+	</div><!--row-->
+      </div><!--controller-->
       
 
-      <div class="panel panel-default">
+      <div class="row" class="game-screen">
+	<div ng-controller="GameCreationCtrl">
+	  <div class="col-sm-6 col-md-2">
+	    <div class="thumbnail">
+	      <img src="resources/img/cards/23.png" alt="23">
+	      <div class="text-center caption">
+		<h3>Carte tirée</h3>
+		  <div class="btn-group">
+		    <a href="#" class="btn btn-success">Prendre</a> 
+		    <a href="#" class="btn btn-danger">Donner</a>
+		  </div><!--btn-group-->
+	      </div><!--caption-->
+	    </div><!--thumbnail-->
+	  </div><!--col du thumbnail-->
+	</div><!--ng-controller-->
+      </div><!--row-->
+
+      
+      <div class="panel panel-default game-screen">
 	<div class="panel-heading">
-	  <h3 class="panel-title">À vous de jouer !</h3>
-	</div>
+	  <h3 class="panel-title"><b>Théo</b>, à vous de jouer !</h3>
+	</div><!--heading-->
+
 	<div class="panel-body">
+	  <div class="col-md-1 center-block">
+	    <img src="resources/img/characters/Lisa.png">
+	  </div><!--col-md-1-->
 	  <div class="col-md-1">
-	    <img src="resources/img/characters/Ahmed.png">
-	    <h4 class="text-center"><small>Joueur</small><br/>Theo</h4>
-	    <h4 class="text-center"><small>Points</small><br/>216</h4>
-	    <h4 class="text-center"><small>Jetons</small><br/>12</h4>
-	  </div>
-	</div>
-
-      </div>
-    </div>
-    
-
-  <div class="col-md-9 media-middle">
+	    <h2 class="text-center"><small>Points</small><br/>216</h2>
+	    <h2 class="text-center"><small>Jetons</small><br/>12</h2>
+	  </div><!--col-md-1-->
+	  
+	  <div class="col-md-6">
 	    <div ng-controller="GameCreationCtrl" >
 	      <div ng-repeat="n in r">
 		<div class="col-md-1">
 		  <img src="./resources/img/cards/{{n}}.png">
-		</div>
-	      </div>
-	    </div>
-	  </div>
-
+		</div><!--col-md-1-->
+	      </div><!--ngrepeat-->
+	    </div><!--controller-->
+	  </div><!-- div md6-->
+	</div><!--panel-body-->
+      </div><!--panel-->
+    </div><!--container-->
+    
 
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
