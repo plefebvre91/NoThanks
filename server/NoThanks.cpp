@@ -1,14 +1,20 @@
 #include "NoThanks.hpp"
+Network n;
+
+void f(){
+  n.run();
+}
+
 
 NoThanks::NoThanks(): currentPlayer(0),
 		      chipsOnTable(0),
 		      cardOnTop(),
-		      deck() {
+		      deck(){
   nbPlayers = 5;
   players= new Player*[nbPlayers];
   
   for(int i=0; i<nbPlayers; i++){
-    players[i] = new PlayerAverage();
+    players[i] = new PlayerHuman(&n);
   }
   
   players[0]->setName("Bobiwan");
@@ -58,7 +64,7 @@ void NoThanks::execute(const Action& action, Player& player) {
     // ajouter le jeton sur la table
     ++chipsOnTable;
   }
-
+  
 }
 
 
@@ -76,6 +82,9 @@ bool NoThanks::gameIsFinished() const {
 
 
 void NoThanks::run(){
+  
+  std::thread t(f);
+  
   Logger::get().info(NOTHX_TITLE);
   
   while(!gameIsFinished()) {
@@ -96,6 +105,8 @@ void NoThanks::run(){
   }
   updateScores();
   showScores();
+  
+  t.join();
 }
 
 

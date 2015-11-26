@@ -7,6 +7,7 @@
 #include "Logger.hpp"
 #include "Action.hpp"
 #include "Card.hpp"
+#include "Network.hpp"
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
@@ -22,6 +23,14 @@ public:
    */
   Player();
 
+
+  /**
+   * Constructor
+   */
+  Player(Network* network);
+
+
+  
   /**
    * Destructor
    */
@@ -87,7 +96,7 @@ protected:
   std::set<int> cards;
   bool adjacentCardIsFound(const Card& card) const;
   int score;
-private:
+  Network* net;
   int chips;
   std::string name;
 };

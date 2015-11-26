@@ -6,6 +6,12 @@ Player::Player():cards(),name() {
   chips = NOTHX_NB_CHIPS;
 }
 
+Player::Player(Network* network):cards(),name() {
+  net = network;
+  chips = NOTHX_NB_CHIPS;
+}
+
+
 Player::~Player() {
   
 }

@@ -3,6 +3,7 @@
 
 #include "Player.hpp"
 #include "Definitions.hpp"
+#include "Parser.hpp"
 
 /**
  * Human player class. Implements Player class.
@@ -14,6 +15,11 @@ public:
    * Constructor
    */
   PlayerHuman();
+
+  /**
+   * Constructor
+   */
+  PlayerHuman(Network* network);
 
   /**
    * Destructor
