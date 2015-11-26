@@ -23,14 +23,6 @@ public:
    */
   Player();
 
-
-  /**
-   * Constructor
-   */
-  Player(Network* network);
-
-
-  
   /**
    * Destructor
    */
@@ -96,7 +88,6 @@ protected:
   std::set<int> cards;
   bool adjacentCardIsFound(const Card& card) const;
   int score;
-  Network* net;
   int chips;
   std::string name;
 };

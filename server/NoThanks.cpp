@@ -1,8 +1,7 @@
 #include "NoThanks.hpp"
-Network n;
 
 void f(){
-  n.run();
+  network_run();
 }
 
 
@@ -14,7 +13,7 @@ NoThanks::NoThanks(): currentPlayer(0),
   players= new Player*[nbPlayers];
   
   for(int i=0; i<nbPlayers; i++){
-    players[i] = new PlayerHuman(&n);
+    players[i] = new PlayerHuman();
   }
   
   players[0]->setName("Bobiwan");
@@ -118,9 +117,10 @@ void NoThanks::selectNextPlayer() {
 
 
 void NoThanks::updateScores() {
+  
   for(int i=0; i<nbPlayers; i++) {
+    scores[i] = 0;
     const std::set<int>& cards = players[i]->getCards();
-    
     auto it = cards.rbegin();  
     
     while(it != cards.rend()) {

@@ -17,11 +17,6 @@ public:
   PlayerHuman();
 
   /**
-   * Constructor
-   */
-  PlayerHuman(Network* network);
-
-  /**
    * Destructor
    */
   virtual ~PlayerHuman();  

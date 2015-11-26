@@ -13,6 +13,7 @@ using namespace rapidjson;
 struct NetworkMessage {
   int action;
   std::string msg;
+  std::string name;
 };
 
 

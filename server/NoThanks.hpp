@@ -14,6 +14,7 @@
 #include "Logger.hpp"
 #include "Action.hpp"
 #include "Card.hpp"
+#include "Network.hpp"
 
 /**
  * Main class
