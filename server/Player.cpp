@@ -82,7 +82,7 @@ std::string Player::toJson() const {
     writer.Uint(card);
   }
   writer.EndArray();
-
+  
   writer.EndObject();
   
   return s.GetString();

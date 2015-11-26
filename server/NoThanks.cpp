@@ -69,10 +69,45 @@ void NoThanks::execute(const Action& action, Player& player) {
 
 void NoThanks::display() {
   Logger::get().info("Jetons sur table:"+std::to_string(chipsOnTable));
-
+  std::vector<std::string> jsonPlayers;
   for(int i=0;i<nbPlayers; i++){
     players[i]->info();
+    jsonPlayers.push_back(players[i]->toJson());
   }
+
+  StringBuffer s;
+  Writer<StringBuffer> writer(s);
+  writer.StartObject();
+  
+  writer.String("players");
+  writer.StartArray();
+  for (int i=0; i<nbPlayers; i++) {
+    writer.StartObject();
+    writer.String(JSON_KEY_NAME);
+    writer.String(players[i]->getName().c_str());
+    
+    writer.String(JSON_KEY_SCORE);
+    writer.Uint(scores[i]);
+  
+    writer.String(JSON_KEY_COINS);
+    writer.Uint(players[i]->getNbChips());
+  
+    writer.String(JSON_KEY_CARDS);
+    const std::set<int>& cards = players[i]->getCards();
+
+    writer.StartArray();
+    for (auto card : cards) {
+      writer.Uint(card);
+    }
+    writer.EndArray();
+    writer.EndObject();
+
+
+  }
+  writer.EndArray();
+  writer.EndObject();
+  std::string all = s.GetString();
+  network_send(all);
 }
 
 bool NoThanks::gameIsFinished() const {

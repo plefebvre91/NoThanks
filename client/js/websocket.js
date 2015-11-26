@@ -4,7 +4,8 @@ if(!window.WebSocket)
 var ws = new WebSocket("ws://localhost:9001/");
 
 ws.onopen = function(e){$('#title').html("OK"); ws.send('LOL');}
-ws.onmessage = function(e){console.log(e.data)} 
+ws.onmessage = function(e){console.log(e.data)
+			  Object player = JSON.parse(e.data);} 
 ws.onclose = function(e){$("#title").html("Close");}
 ws.onerror = function(e){console.log('Erreur websocket');}
 

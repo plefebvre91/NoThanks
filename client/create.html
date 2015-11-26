@@ -33,32 +33,33 @@
 			 title="{{ player.type }}" 
 			 subtitle="{{ player.name}}"></player-info>
 	  </div><!--ng-reapeat-->
+	  <div class="col-md-2">
+	    <button ng-show="players.length<5"
+		  ng-click="addPlayer('Human');" type="button" class="btn btn-info btn-lg">
+	      <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Ajouter un humain
+	    </button><br/><br/>
+
+	    	    <button type="button" ng-show="players.length<5" 
+		  ng-click="addPlayer('Computer');"
+		      class="btn btn-info btn-lg">
+	      <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Ajouter un ordinateur
+	    </button><br/><br/>
+
+	    <button  ng-show="players.length>2"
+		   ng-click="removePlayer();"
+	     type="button" class="btn btn-danger btn-lg">
+	      <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span> Effacer le dernier
+	    </button><br/><br/>
+
+	    	    <button type="button" class="btn btn-success btn-lg"	  ng-click="createGame();">
+	      <span class="glyphicon glyphicon-play" aria-hidden="true"></span> Jouer !
+	    </button>
+
+
+	  </div>
+	  
 	</div><!--row-->
 	
-	<div class="btn-group">
-	  <button class="btn btn-primary"
-		  ng-show="players.length<5" 
-		  ng-click="addPlayer('Computer');">
-	    Ajouter ordi
-	  </button>
-	  
-	  <button class="btn btn-primary"
-		  ng-show="players.length<5"
-		  ng-click="addPlayer('Human');">
-	    Ajouter humain
-	  </button>
-	  
-	  <button  class="btn btn-warning"
-		   ng-show="players.length>2"
-		   ng-click="removePlayer();">
-	    Effacer joueur
-	  </button>
-	  
-	  <button class="btn btn-success"
-		  ng-click="createGame();">
-	    Créer une partie
-	  </button>
-	</div><!--btn-group-->
       </div><!--ng-controller-->
       
       
@@ -90,15 +91,29 @@
       <div ng-show="showGameScreen" class="col-md-12">
 	<div class="panel panel-default">
 	  <div class="panel-body">
-	    <div class="col-md-2 text-center">
+	    <div class="col-md-3 text-center">
 <!--	      <div class="thumbnail alert-info">-->
 		<img src="resources/img/cards/23.png" alt="23">
 		<div class="text-center">
 		  <p>Carte tirée</p>
 		  <div class="btn-group">
-		    <a href="#" class="btn btn-success" 
-		       ng-click="nextPlayer()">Prendre</a> 
-		    <a href="#" class="btn btn-danger">Donner</a>
+		    <button type="button" 
+			    class="btn btn-success"
+			    ng-click="nextPlayer()"
+		      ><span class="glyphicon glyphicon-ok"></span> 
+		      Prendre
+		    </button>
+
+
+		    <button type="button" 
+			    class="btn btn-danger"
+			    ng-click="nextPlayer()"
+		      ><span class="glyphicon glyphicon-remove"></span> 
+		      Donner
+		    </button>
+
+		    
+		    
 		  </div><!--btn-group-->
 		</div><!--caption-->
 <!--	      </div><!--thumbnail-->
