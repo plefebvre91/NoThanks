@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm>
 
 #include "Definitions.hpp"
 #include "Player.hpp"
@@ -79,7 +80,7 @@ private:
   int nbPlayers;
   
   // Players scores
-  int scores[NOTHX_NB_PLAYERS_MAX];
+  std::vector<int> scores;
   
   // Visible card on deck
   Card cardOnTop;
@@ -88,6 +89,6 @@ private:
   Deck deck;  
   
   // Players
-  Player** players;
+  std::vector<Player*> players;
 };
 #endif

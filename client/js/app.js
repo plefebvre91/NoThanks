@@ -3,10 +3,10 @@
  */
 var app = angular.module('NoThanksApp', []);
 
-const APP_TITLE    = "Non merci!";
-const APP_SUBTITLE = "Version 1";
-const TYPE_HUMAN   = 'Human';
-const TYPE_PC      = 'Computer';
+if(!window.WebSocket)
+    throw "WebSocket indisponible.";
+
+
 
 /**
  * Menu controller
@@ -24,7 +24,9 @@ for(i=4;i<26;i++){
     ra.push(i);
 }
 
+var playing = false;
 
+var ws = new WebSocket("ws://localhost:9001/");
 /**
  * Game creation module controller
  */
@@ -32,6 +34,51 @@ app.controller('GameCreationCtrl',
 	       ['$scope',
 		
 		function($scope) {
+		    
+		    $scope.ws = ws;
+		    
+		    $scope.ws.onopen = function(e){
+			$("#title").html("OK");
+//			$scope.ws.send('LOL');
+			$scope.setStatus(MSG_CONNECTED);
+		    };
+		    
+		    $scope.ws.onmessage = function(e){
+			console.log(e.data);
+			if(playing){
+			    var player = new Object();
+			    player = JSON.parse(e.data);
+			    for(i=0;i<players.length;i++){
+				players[i] = player[i];
+			    }
+			}
+		    };
+		    
+		    $scope.ws.onclose = function(e) {
+			$("#title").html("Close");
+		    };
+		    
+		    $scope.ws.onerror = function(e){
+			$("#title").html("Close");
+			console.log('Erreur websocket');
+			$scope.ws.close();
+		    };
+		    
+		    $scope.send = function(msg) {
+			var i=0;
+			if($scope.ws.readyState != 1){
+			    $("#title").html("Autre essai" + i);
+			    setTimeout($scope.send(msg), 400);
+			    i++;
+			}
+			else  $scope.send(msg);
+		    };
+		    
+		    
+		    $scope.setStatus = setStatus;
+		    
+		    
+		    
 		    // Players names
 		    $scope.names = ['Ahmed', 'Lisa', 
 				    'Leo', 'Francoise', 'Astrid'];
@@ -73,7 +120,6 @@ app.controller('GameCreationCtrl',
 		    };
 
 		    // Enables/disables screen display
-		    console.log("appel");
 		    $scope.showCreationScreen = true;
 		    $scope.showScoresScreen = false;
 		    $scope.showGameScreen   = false;
@@ -103,10 +149,21 @@ app.controller('GameCreationCtrl',
 
 
 function _createGame(players){
+    playing = true;
     var data = '{"players":' + angular.toJson(players)+'}';
     ws.send(data);
     console.log(data);
     var audio = new Audio('resources/sound/sound.mp3');
     audio.play();
     return false;
+}
+
+
+function setStatus(msg) {
+    console.log(msg);
+    $(".alert-dismissible").show();
+    $("#status").html(msg + '<button type="button" class="close" id="status" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span></button>');
+    setTimeout(function(){
+	$(".alert-dismissible").hide();
+    }, 2000);
 }

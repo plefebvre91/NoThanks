@@ -3,24 +3,38 @@
 
 #include <iostream>
 #include <cstdio>
-
+#include <vector>
 #include "rapidjson/document.h"
 #include "Definitions.hpp"
 #include "Logger.hpp"
 
 using namespace rapidjson;
 
-struct NetworkMessage {
+struct Info {
+  int nbPlayers;
+  std::vector<std::string> names;
+  std::vector<std::string> types;
+  std::string message;
   int action;
-  std::string msg;
-  std::string name;
+  int is_fresh;
+  
+  void reset() {
+    nbPlayers = 0;
+    names.clear();
+    types.clear();
+    action = 0;
+    is_fresh = false;
+  }
 };
+
 
 
 class Parser {
 public:
   Parser();
-  NetworkMessage get(const std::string& str);
+  Info& get(const std::string& str);
   
+private:
+  Info info;
 };
 #endif

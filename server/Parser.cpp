@@ -1,36 +1,57 @@
 #include "Parser.hpp"
 #include "ctime"
 #include <assert.h>
+#include <mutex>
 Parser::Parser(){}
 
-NetworkMessage Parser::get(const std::string& str) {
+Info& Parser::get(const std::string& str) {
   Document document;
-
   
-  NetworkMessage nm;
-  nm.action = -1;
-  nm.msg = "Vide";
-  nm.name = "Bobiwane";
-
   std::string s(str.c_str());
   char* buffer = (char*)s.c_str();
+  
   if (document.ParseInsitu(buffer).HasParseError()) {
     Logger::get().info("Erreur de Syntaxe" + str);
-    return nm;
+    return info;
   }
   
+  if(document.HasMember(JSON_KEY_ACTION))
+    info.action = document[JSON_KEY_ACTION].GetUint();
 
-  int action = document[JSON_KEY_ACTION].GetUint();
-  std::string msg = document[JSON_KEY_MESSAGE].GetString();
-  std::string name = "Bobiwan";
-    
-
-  nm.msg= msg;
-  nm.action = action;
-  nm.name.assign(name);
-
-  Logger::get().info(msg);
-  Logger::get().info("Action: "+std::to_string(action));
+  if(document.HasMember(JSON_KEY_MESSAGE))
+  info.message = document[JSON_KEY_MESSAGE].GetString();
   
-  return nm;
+  if(document.HasMember("players")) {
+    const Value& players = document["players"];
+    
+    info.nbPlayers = players.Size();
+
+    for (Value::ConstValueIterator itr = players.Begin(); 
+	 itr != players.End(); ++itr) {
+      if(itr->HasMember("name")){
+	const Value& metadata = (*itr)["name"];
+	info.names.push_back(metadata.GetString());
+      }
+
+      if(itr->HasMember("type")){
+	const Value& metadata = (*itr)["type"];
+	info.types.push_back(metadata.GetString());
+      }
+    }
+
+  }
+    
+  Logger::get().info("From client:");
+  Logger::get().info("Nombre joueurs:"+std::to_string(info.nbPlayers));
+  Logger::get().info("Action:"+std::to_string(info.action));
+  
+  for(auto n : info.names){
+    Logger::get().info(n);
+  }
+
+  for(auto n : info.types){
+    Logger::get().info(n);
+  }
+  
+  return info;
 }

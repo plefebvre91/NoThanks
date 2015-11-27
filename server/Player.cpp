@@ -56,6 +56,10 @@ bool Player::adjacentCardIsFound(const Card& card) const {
 }
 
 
+int Player::getScore() const {
+  return score;
+}
+
 void Player::setScore(int s) {
   score = s;
 }

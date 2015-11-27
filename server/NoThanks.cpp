@@ -1,42 +1,35 @@
 #include "NoThanks.hpp"
-
-void f(){
-  network_run();
-}
-
-
+#include <mutex>
 NoThanks::NoThanks(): currentPlayer(0),
 		      chipsOnTable(0),
+		      scores(),
 		      cardOnTop(),
-		      deck(){
-  nbPlayers = 5;
-  players= new Player*[nbPlayers];
+		      deck(),
+		      players() {
+
+  network::conf.reset();
   
-  for(int i=0; i<nbPlayers; i++){
-    players[i] = new PlayerHuman();
+  while(network::conf.nbPlayers == 0) {
+    network::get_data();
+    sleep(1);
+    std::cout << "boucl"<< std::endl;
+    nbPlayers = network::conf.nbPlayers;
   }
-  
-  players[0]->setName("Bobiwan");
-  players[1]->setName("Liara");
-  players[2]->setName("Karl");
-  players[3]->setName("Robby");
-  players[4]->setName("Yush");
 
   for(int i=0; i<nbPlayers; i++){
-    scores[i] = 0;
+    scores.push_back(0);
+    players.push_back(new PlayerAverage());
+    players[i]->setName(network::conf.names[i]);
   }
 }
 
-
 NoThanks::~NoThanks() {
-  for(int i=0; i<nbPlayers; i++){
-    delete players[i];
+  for(auto player : players){
+    delete player;
   }
-  delete [] players;
 }
 
 void NoThanks::execute(const Action& action, Player& player) {
-  
   // prendre les jetons sur la table
   if(action == ACT_TAKE_CHIPS) {
     // Preciser si on a pas le choix
@@ -70,9 +63,9 @@ void NoThanks::execute(const Action& action, Player& player) {
 void NoThanks::display() {
   Logger::get().info("Jetons sur table:"+std::to_string(chipsOnTable));
   std::vector<std::string> jsonPlayers;
-  for(int i=0;i<nbPlayers; i++){
-    players[i]->info();
-    jsonPlayers.push_back(players[i]->toJson());
+  
+  for(auto player : players) {
+    player->info();
   }
 
   StringBuffer s;
@@ -81,19 +74,19 @@ void NoThanks::display() {
   
   writer.String("players");
   writer.StartArray();
-  for (int i=0; i<nbPlayers; i++) {
+  for (auto player : players) {
     writer.StartObject();
     writer.String(JSON_KEY_NAME);
-    writer.String(players[i]->getName().c_str());
+    writer.String(player->getName().c_str());
     
     writer.String(JSON_KEY_SCORE);
-    writer.Uint(scores[i]);
+    writer.Uint(player->getScore());
   
     writer.String(JSON_KEY_COINS);
-    writer.Uint(players[i]->getNbChips());
+    writer.Uint(player->getNbChips());
   
     writer.String(JSON_KEY_CARDS);
-    const std::set<int>& cards = players[i]->getCards();
+    const std::set<int>& cards = player->getCards();
 
     writer.StartArray();
     for (auto card : cards) {
@@ -107,7 +100,8 @@ void NoThanks::display() {
   writer.EndArray();
   writer.EndObject();
   std::string all = s.GetString();
-  network_send(all);
+  std::cout << "icccccccci"<<std::endl;
+network::send(all);
 }
 
 bool NoThanks::gameIsFinished() const {
@@ -116,8 +110,6 @@ bool NoThanks::gameIsFinished() const {
 
 
 void NoThanks::run(){
-  
-  std::thread t(f);
   
   Logger::get().info(NOTHX_TITLE);
   
@@ -139,8 +131,6 @@ void NoThanks::run(){
   }
   updateScores();
   showScores();
-  
-  t.join();
 }
 
 
@@ -152,30 +142,28 @@ void NoThanks::selectNextPlayer() {
 
 
 void NoThanks::updateScores() {
-  
-  for(int i=0; i<nbPlayers; i++) {
-    scores[i] = 0;
-    const std::set<int>& cards = players[i]->getCards();
-    auto it = cards.rbegin();  
+  for(auto player : players){
     
+    const std::set<int>& cards = player->getCards();
+    auto it = cards.rbegin();  
+    int score = 0;
     while(it != cards.rend()) {
       while(cards.find((*it)-1) != cards.end())
 	++it;
       
-      scores[i]+=*it;
+      score += *it;
       ++it;
     }
-    scores[i] -= players[i]->getNbChips();
-    players[i]->setScore(scores[i]);
+    score -= player->getNbChips();
+    player->setScore(score);
+
   }
 }
 
 void NoThanks::showScores() const {  
-  for(int i=0; i<nbPlayers; i++) {
-    Logger::get().info(players[i]->getName()
-		       +": "
-		       +std::to_string(scores[i]));
+  for(auto player : players) {
+    std::string score = std::to_string(player->getScore());
+    std::string name  = player->getName();
+    Logger::get().info(name + ": " + score);
   }
 }
-
-

@@ -18,16 +18,15 @@ Action PlayerHuman::play(const Card& card) {
   (void)card;
 
   Action action;
-  NetworkMessage nm;
   int a = -1;
 
-  while(nm.name.compare(name)) {
-    nm = network_get_last_data();
-    sleep(1);
-  }
-  
-  std::string m("Recu, selection");
-  network_send(m);
+   while(!network::conf.is_fresh) {
+     network::get_data();
+     sleep(1);
+   }
+   network::conf.is_fresh = false;
+   a = network::conf.action;
+
   switch(a){
   case 0: action = ACT_TAKE_CHIPS; break;
   case 1: action = ACT_GIVE_A_CHIP; break;
