@@ -20,7 +20,7 @@ Action PlayerHuman::play(const Card& card) {
   Action action;
   int a = -1;
 
-   while(!network::conf.is_fresh) {
+  while(!network::conf.is_fresh) {
      network::get_data();
      sleep(1);
    }

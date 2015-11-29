@@ -7,20 +7,32 @@ NoThanks::NoThanks(): currentPlayer(0),
 		      deck(),
 		      players() {
 
-  network::conf.reset();
+  //network::conf.reset();
+  // if(network::conf.nbPlayers == 0) {
+  //   std::cout << "nbPLayers" << nbPlayers << std::endl;
+  //   std::cout << "dans conf"<<network::conf.nbPlayers << std::endl;
+    
+  //   network::get_data();
+  //   sleep(1);
+    
+  //   nbPlayers = network::conf.nbPlayers;
+  // }
   
-  while(network::conf.nbPlayers == 0) {
-    network::get_data();
-    sleep(1);
-    std::cout << "boucl"<< std::endl;
-    nbPlayers = network::conf.nbPlayers;
-  }
+  std::cout << "************"<< std::endl;
 
+  nbPlayers = 2;
   for(int i=0; i<nbPlayers; i++){
     scores.push_back(0);
     players.push_back(new PlayerAverage());
-    players[i]->setName(network::conf.names[i]);
+    //    players[i]->setName(network::conf.names[i]);
+
   }
+  players[0]->setName("Ahmed");
+  players[1]->setName("Lisa");
+  
+  std::cout << "attend" << std::endl;
+  sleep(5);
+  
 }
 
 NoThanks::~NoThanks() {
@@ -95,13 +107,22 @@ void NoThanks::display() {
     writer.EndArray();
     writer.EndObject();
 
-
+    
   }
   writer.EndArray();
   writer.EndObject();
   std::string all = s.GetString();
-  std::cout << "icccccccci"<<std::endl;
-network::send(all);
+
+
+  try {
+    network::send(all);
+    Logger::get().info("Envoi : " + all);
+    std::cout << "icccccccci"<<std::endl;
+  } catch(websocketpp::exception e){
+    std::cout << e.what() << std::endl;
+    std::cout << "Non ENOVY" << std::endl;
+    return;
+  }
 }
 
 bool NoThanks::gameIsFinished() const {
@@ -112,7 +133,7 @@ bool NoThanks::gameIsFinished() const {
 void NoThanks::run(){
   
   Logger::get().info(NOTHX_TITLE);
-  
+
   while(!gameIsFinished()) {
     Player& player = *players[currentPlayer]; 
     Logger::get().info("Carte distribuee:"+
@@ -122,12 +143,13 @@ void NoThanks::run(){
 
     Action action = player.hasChips()? 
       player.play(deck.first()) : ACT_TAKE_CHIPS;
-
+    
     execute(action, player);
     updateScores();
     display();
 
     selectNextPlayer();
+    sleep(2);
   }
   updateScores();
   showScores();

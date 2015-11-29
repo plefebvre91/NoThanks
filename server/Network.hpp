@@ -15,7 +15,7 @@ namespace network {
   static std::string received;
   static websocketpp::connection_hdl handler;
   static Info conf;
-  
+  static Parser parser;
   void run();
   void stop();
   void on_message(websocketpp::connection_hdl h, server::message_ptr m);

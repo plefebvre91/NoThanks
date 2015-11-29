@@ -19,7 +19,7 @@ Info& Parser::get(const std::string& str) {
     info.action = document[JSON_KEY_ACTION].GetUint();
 
   if(document.HasMember(JSON_KEY_MESSAGE))
-  info.message = document[JSON_KEY_MESSAGE].GetString();
+    info.message = document[JSON_KEY_MESSAGE].GetString();
   
   if(document.HasMember("players")) {
     const Value& players = document["players"];
@@ -38,20 +38,22 @@ Info& Parser::get(const std::string& str) {
 	info.types.push_back(metadata.GetString());
       }
     }
-
   }
     
   Logger::get().info("From client:");
-  Logger::get().info("Nombre joueurs:"+std::to_string(info.nbPlayers));
+  Logger::get().info("Nombre joueurs: "+std::to_string(info.nbPlayers));
   Logger::get().info("Action:"+std::to_string(info.action));
-  
-  for(auto n : info.names){
-    Logger::get().info(n);
-  }
 
-  for(auto n : info.types){
-    Logger::get().info(n);
-  }
+  
+  // for(auto n : info.names){
+  //   Logger::get().info("Boucle noms");
+  //   Logger::get().info(n);
+  // }
+
+  // for(auto n : info.types){
+  //   Logger::get().info("Boucle types");
+  //   Logger::get().info(n);
+  // }
   
   return info;
 }

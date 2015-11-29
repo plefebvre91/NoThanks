@@ -27,6 +27,31 @@ for(i=4;i<26;i++){
 var playing = false;
 
 var ws = new WebSocket("ws://localhost:9001/");
+
+ws.onclose = function(e) {
+    $("#title").html("Close");
+};
+
+
+ws.onerror = function(e){
+    $("#title").html("Close");
+    console.log('Erreur websocket');
+    ws.close();
+};
+
+ws.onmessage = function(e){
+    console.log(e.data);
+    alert('a');
+    if(playing){
+	var player = new Object();
+	player = JSON.parse(e.data);
+	for(i=0;i<players.length;i++){
+	    players[i] = player[i];
+	}
+    }
+};
+
+		    
 /**
  * Game creation module controller
  */
@@ -35,34 +60,14 @@ app.controller('GameCreationCtrl',
 		
 		function($scope) {
 		    
-		    $scope.ws = ws;
 		    
-		    $scope.ws.onopen = function(e){
+		    
+		    ws.onopen = function(e){
 			$("#title").html("OK");
 //			$scope.ws.send('LOL');
 			$scope.setStatus(MSG_CONNECTED);
 		    };
 		    
-		    $scope.ws.onmessage = function(e){
-			console.log(e.data);
-			if(playing){
-			    var player = new Object();
-			    player = JSON.parse(e.data);
-			    for(i=0;i<players.length;i++){
-				players[i] = player[i];
-			    }
-			}
-		    };
-		    
-		    $scope.ws.onclose = function(e) {
-			$("#title").html("Close");
-		    };
-		    
-		    $scope.ws.onerror = function(e){
-			$("#title").html("Close");
-			console.log('Erreur websocket');
-			$scope.ws.close();
-		    };
 		    
 		    $scope.send = function(msg) {
 			var i=0;
@@ -111,6 +116,7 @@ app.controller('GameCreationCtrl',
 			$scope.playerIndex++;
 			$scope.playerIndex %= $scope.players.length;
 			$scope.currentPlayer = $scope.players[$scope.playerIndex];
+			ws.send("query");
 			return false;
 		    };
 		    
@@ -151,7 +157,7 @@ app.controller('GameCreationCtrl',
 function _createGame(players){
     playing = true;
     var data = '{"players":' + angular.toJson(players)+'}';
-    ws.send(data);
+//    ws.send(data);
     console.log(data);
     var audio = new Audio('resources/sound/sound.mp3');
     audio.play();
