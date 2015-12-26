@@ -18,15 +18,9 @@ Action PlayerHuman::play(const Card& card) {
   (void)card;
 
   Action action;
-  int a = -1;
-
-  while(!network::conf.is_fresh) {
-     network::get_data();
-     sleep(1);
-   }
-   network::conf.is_fresh = false;
-   a = network::conf.action;
-
+  std::cout << "Action :\n(0) take\n(1) give\n";
+  int a;
+  std::cin >> a;
   switch(a){
   case 0: action = ACT_TAKE_CHIPS; break;
   case 1: action = ACT_GIVE_A_CHIP; break;

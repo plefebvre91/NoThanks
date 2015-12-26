@@ -13,8 +13,7 @@ set(SRC_FILES server/main.cpp
   server/Deck.cpp
   server/Card.cpp
   server/Logger.cpp
-  server/Parser.cpp
-  server/Network.cpp)
+  server/Parser.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 

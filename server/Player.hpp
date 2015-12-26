@@ -7,7 +7,6 @@
 #include "Logger.hpp"
 #include "Action.hpp"
 #include "Card.hpp"
-#include "Network.hpp"
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"

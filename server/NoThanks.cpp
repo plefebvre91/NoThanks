@@ -1,5 +1,5 @@
 #include "NoThanks.hpp"
-#include <mutex>
+
 NoThanks::NoThanks(): currentPlayer(0),
 		      chipsOnTable(0),
 		      scores(),
@@ -7,17 +7,6 @@ NoThanks::NoThanks(): currentPlayer(0),
 		      deck(),
 		      players() {
 
-  //network::conf.reset();
-  // if(network::conf.nbPlayers == 0) {
-  //   std::cout << "nbPLayers" << nbPlayers << std::endl;
-  //   std::cout << "dans conf"<<network::conf.nbPlayers << std::endl;
-    
-  //   network::get_data();
-  //   sleep(1);
-    
-  //   nbPlayers = network::conf.nbPlayers;
-  // }
-  
   std::cout << "************"<< std::endl;
 
   nbPlayers = 2;
@@ -31,7 +20,7 @@ NoThanks::NoThanks(): currentPlayer(0),
   players[1]->setName("Lisa");
   
   std::cout << "attend" << std::endl;
-  sleep(5);
+
   
 }
 
@@ -113,16 +102,7 @@ void NoThanks::display() {
   writer.EndObject();
   std::string all = s.GetString();
 
-
-  try {
-    network::send(all);
-    Logger::get().info("Envoi : " + all);
-    std::cout << "icccccccci"<<std::endl;
-  } catch(websocketpp::exception e){
-    std::cout << e.what() << std::endl;
-    std::cout << "Non ENOVY" << std::endl;
-    return;
-  }
+  //send all data;
 }
 
 bool NoThanks::gameIsFinished() const {
@@ -149,7 +129,7 @@ void NoThanks::run(){
     display();
 
     selectNextPlayer();
-    sleep(2);
+    
   }
   updateScores();
   showScores();
