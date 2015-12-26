@@ -32,7 +32,7 @@ public:
   const Card& next();
 
   /**
-   * \return the currently player card
+   * \return the currently played card
    */
   const Card& first();
 

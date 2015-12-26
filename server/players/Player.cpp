@@ -2,7 +2,7 @@
 
 using namespace rapidjson;
 
-Player::Player():cards(),name() {
+Player::Player():cards(),score(0),name() {
   chips = NOTHX_NB_CHIPS;
 }
 

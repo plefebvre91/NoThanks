@@ -6,12 +6,17 @@ NoThanks::NoThanks(): currentPlayer(0),
 		      cardOnTop(),
 		      deck(),
 		      players() {
-
+  
   std::cout << "************"<< std::endl;
-
+  
   nbPlayers = 2;
+  
   for(int i=0; i<nbPlayers; i++){
     scores.push_back(0);
+    
+    if(i==0){
+      players.push_back(new PlayerHuman());
+    }
     players.push_back(new PlayerAverage());
     //    players[i]->setName(network::conf.names[i]);
 
@@ -158,7 +163,6 @@ void NoThanks::updateScores() {
     }
     score -= player->getNbChips();
     player->setScore(score);
-
   }
 }
 
