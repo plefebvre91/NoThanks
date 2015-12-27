@@ -24,6 +24,28 @@ for(i=4;i<26;i++){
     ra.push(i);
 }
 
+var names = ['Ahmed', 'Lisa', 
+		'Leo', 'Francoise', 'Astrid'];
+
+		
+			// Players info
+var players = [
+    {
+	name: names[0], 
+	type: TYPE_HUMAN, 
+	score:0, 
+	coins:11,
+	cards: [4,5,6]
+    },
+    {
+	name: names[1],
+	type: TYPE_HUMAN,
+	score:0,
+	coins:11,
+	cards: [7,8,9]
+    }];
+
+
 var playing = false;
 
 var ws = new WebSocket("ws://localhost:8080/");
@@ -49,28 +71,11 @@ app.controller('GameCreationCtrl',
 		
 		function($scope) {
 		    
+		    $scope.players = players;
+		    $scope.names = names;
 		    $scope.init=function(){
 			// Players names
-			$scope.names = ['Ahmed', 'Lisa', 
-					'Leo', 'Francoise', 'Astrid'];
-			
-			// Players info
-			$scope.players = [
-			    {
-				name: $scope.names[0], 
-				type: TYPE_HUMAN, 
-				score:0, 
-				coins:11,
-				cards: [4,5,6]
-			    },
-			    {
-				name: $scope.names[1],
-				type: TYPE_HUMAN,
-				score:0,
-				coins:11,
-				cards: [7,8,9]
-			    }];
-			$scope.currentPlayer = $scope.players[0];
+			$scope.currentPlayer = players[0];
 			$scope.playerIndex = 0;
 			
 		    }
@@ -96,7 +101,7 @@ app.controller('GameCreationCtrl',
 		    
 		    ws.onmessage = function(e){
 			console.log("Recu :" + e.data);
-			updatePlayers($scope.players, e);
+			updatePlayers(players, e);
 		    };
 		    
 
@@ -107,23 +112,23 @@ app.controller('GameCreationCtrl',
 		    
 		    // Add a new player
 		    $scope.addPlayer = function(type){
-			addPlayer($scope.players, $scope.names, type);
+			addPlayer(players, $scope.names, type);
 		    };
 
 
 		    $scope.nextPlayer = function(){
-			console.log("Apres en: " + angular.toJson($scope.players[$scope.playerIndex]));
-			var str = "indice: " + $scope.playerIndex + " / nom: " +   $scope.players[$scope.playerIndex].name;
+			console.log("Apres en: " + angular.toJson(players[$scope.playerIndex]));
+			var str = "indice: " + $scope.playerIndex + " / nom: " +   players[$scope.playerIndex].name;
 			$scope.playerIndex++;
-			$scope.playerIndex %= $scope.players.length;
-			$scope.currentPlayer = $scope.players[$scope.playerIndex];
+			$scope.playerIndex %= players.length;
+			$scope.currentPlayer = players[$scope.playerIndex];
 			ws.send(str);
 			return false;
 		    };
 		    
 		    // Remove the last player
 		    $scope.removePlayer = function() {
-			removePlayer($scope.players);
+			removePlayer(players);
 		    };
 
 		    // Enables/disables screen display
@@ -144,7 +149,7 @@ app.controller('GameCreationCtrl',
 		    };
 		    
 		    $scope.createGame = function() {
-			_createGame($scope.players);
+			_createGame(players);
 			//$scope.init();
 			$scope.showCreation(false);
 			$scope.showScores(false);
