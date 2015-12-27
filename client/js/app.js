@@ -26,7 +26,7 @@ for(i=4;i<26;i++){
 
 var playing = false;
 
-var ws = new WebSocket("ws://localhost:9001/");
+var ws = new WebSocket("ws://localhost:8080/");
 
 ws.onclose = function(e) {
     $("#title").html("Close");
@@ -39,17 +39,6 @@ ws.onerror = function(e){
     ws.close();
 };
 
-ws.onmessage = function(e){
-    console.log(e.data);
-    alert('a');
-    if(playing){
-	var player = new Object();
-	player = JSON.parse(e.data);
-	for(i=0;i<players.length;i++){
-	    players[i] = player[i];
-	}
-    }
-};
 
 		    
 /**
@@ -60,11 +49,37 @@ app.controller('GameCreationCtrl',
 		
 		function($scope) {
 		    
-		    
-		    
+		    $scope.init=function(){
+			// Players names
+			$scope.names = ['Ahmed', 'Lisa', 
+					'Leo', 'Francoise', 'Astrid'];
+			
+			// Players info
+			$scope.players = [
+			    {
+				name: $scope.names[0], 
+				type: TYPE_HUMAN, 
+				score:0, 
+				coins:11,
+				cards: [4,5,6]
+			    },
+			    {
+				name: $scope.names[1],
+				type: TYPE_HUMAN,
+				score:0,
+				coins:11,
+				cards: [7,8,9]
+			    }];
+			$scope.currentPlayer = $scope.players[0];
+			$scope.playerIndex = 0;
+			
+		    }
+
+
 		    ws.onopen = function(e){
 			$("#title").html("OK");
 //			$scope.ws.send('LOL');
+			$scope.init();
 			$scope.setStatus(MSG_CONNECTED);
 		    };
 		    
@@ -79,44 +94,30 @@ app.controller('GameCreationCtrl',
 			else  $scope.send(msg);
 		    };
 		    
+		    ws.onmessage = function(e){
+			console.log("Recu :" + e.data);
+			updatePlayers($scope.players, e);
+		    };
 		    
+
 		    $scope.setStatus = setStatus;
 		    
 		    
 		    
-		    // Players names
-		    $scope.names = ['Ahmed', 'Lisa', 
-				    'Leo', 'Francoise', 'Astrid'];
-		    
-		    // Players info
-		    $scope.players = [
-			{
-			    name: $scope.names[0], 
-			    type: TYPE_HUMAN, 
-			    score:0, 
-			    coins:11,
-			    cards: [15,10,31]
-			},
-			{
-			    name: $scope.names[1],
-			    type: TYPE_HUMAN,
-			    score:0,
-			    coins:11,
-			    cards: [11,21,13]
-			}];
 		    
 		    // Add a new player
 		    $scope.addPlayer = function(type){
 			addPlayer($scope.players, $scope.names, type);
 		    };
 
-		    $scope.currentPlayer = $scope.players[0];
-		    $scope.playerIndex = 0;
+
 		    $scope.nextPlayer = function(){
+			console.log("Apres en: " + angular.toJson($scope.players[$scope.playerIndex]));
+			var str = "indice: " + $scope.playerIndex + " / nom: " +   $scope.players[$scope.playerIndex].name;
 			$scope.playerIndex++;
 			$scope.playerIndex %= $scope.players.length;
 			$scope.currentPlayer = $scope.players[$scope.playerIndex];
-			ws.send("query");
+			ws.send(str);
 			return false;
 		    };
 		    
@@ -144,6 +145,7 @@ app.controller('GameCreationCtrl',
 		    
 		    $scope.createGame = function() {
 			_createGame($scope.players);
+			//$scope.init();
 			$scope.showCreation(false);
 			$scope.showScores(false);
 			$scope.showGame(true);
@@ -155,9 +157,10 @@ app.controller('GameCreationCtrl',
 
 
 function _createGame(players){
+
     playing = true;
-    var data = '{"players":' + angular.toJson(players)+'}';
-//    ws.send(data);
+    var data = '{"type":"init","players":' + angular.toJson(players)+'}';
+    ws.send(data);
     console.log(data);
     var audio = new Audio('resources/sound/sound.mp3');
     audio.play();

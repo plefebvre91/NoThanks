@@ -1,28 +1,25 @@
 #include "NoThanks.hpp"
 
-NoThanks::NoThanks(): currentPlayer(0),
-		      chipsOnTable(0),
-		      scores(),
-		      cardOnTop(),
-		      deck(),
-		      players() {
+NoThanks::NoThanks(int _nbPlayers, std::vector<std::string>& names): currentPlayer(0),
+								       chipsOnTable(0),
+								       scores(),
+								       cardOnTop(),
+								       deck(),
+								       players() {
   
   std::cout << "************"<< std::endl;
   
-  nbPlayers = 2;
+  nbPlayers = _nbPlayers;
   
   for(int i=0; i<nbPlayers; i++){
     scores.push_back(0);
     
-    if(i==0){
-      players.push_back(new PlayerHuman());
-    }
     players.push_back(new PlayerAverage());
-    //    players[i]->setName(network::conf.names[i]);
+    players[i]->setName(names.at(i));
 
   }
-  players[0]->setName("Ahmed");
-  players[1]->setName("Lisa");
+  //  players[0]->setName("Ahmed");
+  //  players[1]->setName("Lisa");
   
   std::cout << "attend" << std::endl;
 
@@ -110,6 +107,42 @@ void NoThanks::display() {
   //send all data;
 }
 
+std::string NoThanks::getJSON(){
+  StringBuffer s;
+  Writer<StringBuffer> writer(s);
+  writer.StartObject();
+  
+  writer.String("players");
+  writer.StartArray();
+  for (auto player : players) {
+    writer.StartObject();
+    writer.String(JSON_KEY_NAME);
+    writer.String(player->getName().c_str());
+    
+    writer.String(JSON_KEY_SCORE);
+    writer.Uint(player->getScore());
+  
+    writer.String(JSON_KEY_COINS);
+    writer.Uint(player->getNbChips());
+  
+    writer.String(JSON_KEY_CARDS);
+    const std::set<int>& cards = player->getCards();
+
+    writer.StartArray();
+    for (auto card : cards) {
+      writer.Uint(card);
+    }
+    writer.EndArray();
+    writer.EndObject();
+
+    
+  }
+  writer.EndArray();
+  writer.EndObject();
+  std::string all = s.GetString();
+return all;
+}
+
 bool NoThanks::gameIsFinished() const {
   return deck.isEmpty();
 }
@@ -119,25 +152,26 @@ void NoThanks::run(){
   
   Logger::get().info(NOTHX_TITLE);
 
-  while(!gameIsFinished()) {
-    Player& player = *players[currentPlayer]; 
-    Logger::get().info("Carte distribuee:"+
-			 std::to_string(deck.first().getValue()));
-    
-    Logger::get().info("Au tour de " + player.getName());
-
-    Action action = player.hasChips()? 
-      player.play(deck.first()) : ACT_TAKE_CHIPS;
-    
-    execute(action, player);
+  if(gameIsFinished()) {
     updateScores();
-    display();
-
-    selectNextPlayer();
-    
+    showScores();
+    return;
   }
+  
+  Player& player = *players[currentPlayer]; 
+  Logger::get().info("Carte distribuee:"+
+		     std::to_string(deck.first().getValue()));
+  
+  Logger::get().info("Au tour de " + player.getName());
+  
+  Action action = player.hasChips()? 
+    player.play(deck.first()) : ACT_TAKE_CHIPS;
+  
+  execute(action, player);
   updateScores();
-  showScores();
+  display();
+  
+  selectNextPlayer();
 }
 
 

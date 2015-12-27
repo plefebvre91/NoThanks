@@ -25,7 +25,7 @@ public:
   /**
    * Constructor
    */
-  NoThanks();
+  NoThanks(int, std::vector<std::string>&);
 
   /**
    * Destructor
@@ -36,6 +36,11 @@ public:
    * Main loop
    */
   void run();
+
+  /**
+   * Return the game state (JSON sstring)
+   */
+  std::string getJSON();
 
 private:
   /**

@@ -17,7 +17,7 @@ Info& Parser::get(const std::string& str) {
   
   if(document.HasMember(JSON_KEY_ACTION))
     info.action = document[JSON_KEY_ACTION].GetUint();
-
+  
   if(document.HasMember(JSON_KEY_MESSAGE))
     info.message = document[JSON_KEY_MESSAGE].GetString();
   
