@@ -75,6 +75,9 @@ void NoThanks::display() {
   Writer<StringBuffer> writer(s);
   writer.StartObject();
   
+  writer.String("top");
+  writer.Uint(deck.first().getValue());
+  
   writer.String("players");
   writer.StartArray();
   for (auto player : players) {
@@ -112,6 +115,10 @@ std::string NoThanks::getJSON(){
   Writer<StringBuffer> writer(s);
   writer.StartObject();
   
+  writer.String("top");
+  writer.Uint(deck.first().getValue());
+  
+
   writer.String("players");
   writer.StartArray();
   for (auto player : players) {

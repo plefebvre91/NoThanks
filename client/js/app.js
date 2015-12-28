@@ -23,7 +23,7 @@ var ra = [3];
 for(i=4;i<26;i++){
     ra.push(i);
 }
-
+var currentCard = 3;
 var names = ['Ahmed', 'Lisa', 
 		'Leo', 'Francoise', 'Astrid'];
 
@@ -32,14 +32,14 @@ var names = ['Ahmed', 'Lisa',
 var players = [
     {
 	name: names[0], 
-	type: TYPE_HUMAN, 
+	type: TYPE_PC, 
 	score:0, 
 	coins:11,
 	cards: [4,5,6]
     },
     {
 	name: names[1],
-	type: TYPE_HUMAN,
+	type: TYPE_PC,
 	score:0,
 	coins:11,
 	cards: [7,8,9]
@@ -77,13 +77,12 @@ app.controller('GameCreationCtrl',
 			// Players names
 			$scope.currentPlayer = players[0];
 			$scope.playerIndex = 0;
-			
+//			$scope.currentCard=3;
 		    }
 
 
 		    ws.onopen = function(e){
 			$("#title").html("OK");
-//			$scope.ws.send('LOL');
 			$scope.init();
 			$scope.setStatus(MSG_CONNECTED);
 		    };
@@ -101,10 +100,17 @@ app.controller('GameCreationCtrl',
 		    
 		    ws.onmessage = function(e){
 			console.log("Recu :" + e.data);
+			var card = new Object();
+			card = JSON.parse(e.data);
+			console.log('Carte:'+card.top);
+			currentCard = card.top;
 			updatePlayers(players, e);
+			
+			
 		    };
 		    
 
+		    
 		    $scope.setStatus = setStatus;
 		    
 		    
@@ -122,6 +128,9 @@ app.controller('GameCreationCtrl',
 			$scope.playerIndex++;
 			$scope.playerIndex %= players.length;
 			$scope.currentPlayer = players[$scope.playerIndex];
+			$scope.currentCard = currentCard;
+			
+//			while($scope.currentPlayer.type == TYPE_/) ws.send("next");
 			ws.send(str);
 			return false;
 		    };
@@ -151,6 +160,7 @@ app.controller('GameCreationCtrl',
 		    $scope.createGame = function() {
 			_createGame(players);
 			//$scope.init();
+
 			$scope.showCreation(false);
 			$scope.showScores(false);
 			$scope.showGame(true);
