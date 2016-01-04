@@ -34,17 +34,3 @@ function addPlayer(playersArray, playersNames, type) {
 
     return false;
 };
-
-function updatePlayers(playersArray, newJsonPlayers){
-    var player = new Object();
-    player = JSON.parse(newJsonPlayers.data);
-    for(i=0;i<player.players.length;i++){
-	playersArray[i].score = player.players[i].score;
-	console.log("cards: " + angular.toJson(player.players[i].cards));
-	playersArray[i].cards = player.players[i].cards.slice(0);
-	playersArray[i].coins = player.players[i].coins;
-	
-	console.log("Changé en: " + angular.toJson(playersArray[i]));
-    }
-
-}

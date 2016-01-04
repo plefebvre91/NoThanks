@@ -15,8 +15,9 @@ NoThanks::NoThanks(int _nbPlayers, std::vector<std::string>& names): currentPlay
     scores.push_back(0);
     
     players.push_back(new PlayerAverage());
+    
     players[i]->setName(names.at(i));
-
+    players[i]->isHuman(false);
   }
   //  players[0]->setName("Ahmed");
   //  players[1]->setName("Lisa");
@@ -30,6 +31,10 @@ NoThanks::~NoThanks() {
   for(auto player : players){
     delete player;
   }
+}
+
+bool NoThanks::currentPlayerIsAComputer() const {
+  return !players[currentPlayer]->isHuman();
 }
 
 void NoThanks::execute(const Action& action, Player& player) {

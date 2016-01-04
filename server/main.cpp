@@ -1,5 +1,13 @@
 #include <iostream>
+
+#define SERVER_TEST 1
+
+#ifdef SERVER_TEST
+#include "MockGame.hpp"
+#else
 #include "NoThanks.hpp"
+#endif
+
 #include "server_ws.hpp"
 
 typedef SimpleWeb::SocketServer<SimpleWeb::WS> WsServer;
@@ -13,22 +21,15 @@ int main(int argc, char** argv) {
   //WebSocket (WS)-server at port 8080 using 2 threads
   WsServer server(8080, 2);
   auto& echo=server.endpoint["^/$"];
-  NoThanks* app = nullptr;
   
+#ifdef SERVER_TEST
+  MockGame* app = nullptr;
+#else
+  NoThanks* app = nullptr;
+#endif
+
   // Randomize
   srand(time(0));
-  
-  //Initializes board game, tiles and window
-  
-
-  //Starts game
-  //  app->run();
-
-  //Frees memory
-  //  delete app;
-
-  //  return 0;
-
     
   echo.onmessage=[&server,&app](std::shared_ptr<WsServer::Connection> connection, std::shared_ptr<WsServer::Message> message) {
     if(app == nullptr){
@@ -36,24 +37,41 @@ int main(int argc, char** argv) {
       names.push_back("Ahmed");
       names.push_back("Lisa");
       
+#ifdef SERVER_TEST
+      app = new MockGame(2, names);
+#else
       app = new NoThanks(2, names);
+#endif
     }
     
     auto message_str=message->string();
-    std::cout << "WS Server: Message received: \"" << message_str << "\" from " << (size_t)connection.get() << std::endl;
-    std::cout << "WS Server: Sending message \"" << app->getJSON() <<  "\" to " << (size_t)connection.get() << std::endl;
+    //std::cout << "WS Server: Message received: \"" << message_str << "\" from " << (size_t)connection.get() << std::endl;
+    //  std::cout << "WS Server: Sending message \"" << app->getJSON() <<  "\" to " << (size_t)connection.get() << std::endl;
     
     auto send_stream=std::make_shared<WsServer::SendStream>();
     //    *send_stream << message_str;
+
     app->run();
     *send_stream << app->getJSON();
     server.send(connection, send_stream, [](const boost::system::error_code& ec){
 	if(ec) {
-	  std::cout << "Server: Error sending message. " <<
-	    //See http://www.boost.org/doc/libs/1_55_0/doc/html/boost_asio/reference.html, Error Codes for error code meanings
-	    "Error: " << ec << ", error message: " << ec.message() << std::endl;
+	  std::cout << "Server: Error sending message: " << ec << ", error message: " << ec.message() << std::endl;
 	}
       });
+
+    
+    while(!app->currentPlayerIsAComputer()){
+      auto send_stream=std::make_shared<WsServer::SendStream>();
+      app->run();
+      *send_stream << app->getJSON();
+      server.send(connection, send_stream, [](const boost::system::error_code& ec){
+	  if(ec) {
+	    std::cout << "Server: Error sending message: " << ec << ", error message: " << ec.message() << std::endl;
+	  }
+	});
+      sleep(1);
+    }
+
     
     
   };
@@ -75,8 +93,8 @@ int main(int argc, char** argv) {
   };
   
   std::thread server_thread([&server](){
+      std::cout << "Waiting for connections..." << std::endl;
       server.start();
-      
     });
     
   //Wait for server to start so that the client can connect

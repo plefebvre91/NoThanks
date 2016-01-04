@@ -78,6 +78,8 @@ public:
    */
   void setScore(int s);
 
+  void isHuman(bool b);
+  bool isHuman() const;
 
   /**
    * Getter for score
@@ -95,6 +97,7 @@ protected:
   int score;
   int chips;
   std::string name;
+  bool human;
 };
 
 #endif

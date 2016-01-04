@@ -19,16 +19,12 @@ app.controller('MenuCtrl',
 		}
 	       ]);
 
-var ra = [3];
-for(i=4;i<26;i++){
-    ra.push(i);
-}
 var currentCard = 3;
 var names = ['Ahmed', 'Lisa', 
 		'Leo', 'Francoise', 'Astrid'];
 
 		
-			// Players info
+// Players info
 var players = [
     {
 	name: names[0], 
@@ -46,9 +42,7 @@ var players = [
     }];
 
 
-var playing = false;
-
-var ws = new WebSocket("ws://localhost:8080/");
+var ws = new WebSocket('ws://'+APP_SERVER+':'+APP_PORT+'/');
 
 ws.onclose = function(e) {
     $("#title").html("Close");
@@ -73,16 +67,35 @@ app.controller('GameCreationCtrl',
 		    
 		    $scope.players = players;
 		    $scope.names = names;
-		    $scope.init=function(){
+		    $scope.init = function(){
 			// Players names
 			$scope.currentPlayer = players[0];
 			$scope.playerIndex = 0;
-//			$scope.currentCard=3;
+		    }
+		    
+		    $scope.update = function(json) {
+			var objData = new Object();
+			objData = JSON.parse(json.data);
+			
+			console.log('Recu : ' + angular.toJson(objData));
+
+			$scope.currentCard = objData.top;
+			
+			for(i=0;i<objData.players.length;i++){
+			    players[i].score = objData.players[i].score;
+			    players[i].cards = objData.players[i].cards.slice(0);
+			    players[i].coins = objData.players[i].coins;
+			}
+			
+			$scope.playerIndex++;
+			$scope.playerIndex %= players.length;
+			$scope.currentPlayer = players[$scope.playerIndex];
+			
+			//return false;
 		    }
 
-
 		    ws.onopen = function(e){
-			$("#title").html("OK");
+			$("#title").html("Running...");
 			$scope.init();
 			$scope.setStatus(MSG_CONNECTED);
 		    };
@@ -99,63 +112,37 @@ app.controller('GameCreationCtrl',
 		    };
 		    
 		    ws.onmessage = function(e){
-			console.log("Recu :" + e.data);
-			var card = new Object();
-			card = JSON.parse(e.data);
-			console.log('Carte:'+card.top);
-			currentCard = card.top;
-			updatePlayers(players, e);
-			
-			
+			$scope.update(e);
 		    };
-		    
-
-		    
+		    		    
 		    $scope.setStatus = setStatus;
-		    
-		    
-		    
-		    
+		    		    
 		    // Add a new player
-		    $scope.addPlayer = function(type){
-			addPlayer(players, $scope.names, type);
-		    };
-
+		    $scope.addPlayer = function(type) {addPlayer(players, $scope.names, type);};
 
 		    $scope.nextPlayer = function(){
 			console.log("Apres en: " + angular.toJson(players[$scope.playerIndex]));
-			var str = "indice: " + $scope.playerIndex + " / nom: " +   players[$scope.playerIndex].name;
 			$scope.playerIndex++;
 			$scope.playerIndex %= players.length;
 			$scope.currentPlayer = players[$scope.playerIndex];
-			$scope.currentCard = currentCard;
+//			$scope.currentCard = currentCard;
 			
 //			while($scope.currentPlayer.type == TYPE_/) ws.send("next");
-			ws.send(str);
+			//ws.send(str);
 			return false;
 		    };
 		    
 		    // Remove the last player
-		    $scope.removePlayer = function() {
-			removePlayer(players);
-		    };
+		    $scope.removePlayer = function() {removePlayer(players);};
 
 		    // Enables/disables screen display
 		    $scope.showCreationScreen = true;
 		    $scope.showScoresScreen = false;
 		    $scope.showGameScreen   = false;
 		    
-		    $scope.showCreation = function(display) {
-			$scope.showCreationScreen = display;
-		    };
-		    
-		    $scope.showScores = function(display) {
-			$scope.showScoresScreen = display;
-		    };
-		    
-		    $scope.showGame = function(display) {
-			$scope.showGameScreen = display;
-		    };
+		    $scope.showCreation = function(display) {$scope.showCreationScreen = display;};
+		    $scope.showScores = function(display)   {$scope.showScoresScreen = display;};
+		    $scope.showGame = function(display)     {$scope.showGameScreen = display;};
 		    
 		    $scope.createGame = function() {
 			_createGame(players);
@@ -166,15 +153,13 @@ app.controller('GameCreationCtrl',
 			$scope.showGame(true);
 			return false;
 		    }
-				
-		    $scope.r = ra;
 		}]);
 
 
 function _createGame(players){
 
     playing = true;
-    var data = '{"type":"init","players":' + angular.toJson(players)+'}';
+    var data = '{"phase":"init","players":' + angular.toJson(players)+'}';
     ws.send(data);
     console.log(data);
     var audio = new Audio('resources/sound/sound.mp3');

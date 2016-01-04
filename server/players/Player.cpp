@@ -14,6 +14,15 @@ const std::set<int>& Player::getCards() const {
   return cards;
 }
 
+bool Player::isHuman() const {
+  return human;
+}
+
+void Player::isHuman(bool b) {
+  human = b;
+}
+
+
 int Player::getNbChips() const {
   return chips;
 }

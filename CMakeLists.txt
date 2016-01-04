@@ -1,6 +1,6 @@
 project(NoThanks)
 cmake_minimum_required(VERSION 2.8)
-set(CMAKE_CXX_FLAGS "-Wextra -Wall --std=c++11 -lcrypto")
+set(CMAKE_CXX_FLAGS "-Wextra -Wall --std=c++11 -lcrypto -O0")
 
 include_directories(server/ server/players server/network)
 
@@ -23,6 +23,7 @@ find_package(Threads REQUIRED)
 
 
 set(SRC_FILES server/main.cpp 
+  server/MockGame.cpp
   server/NoThanks.cpp 
   server/players/Player.cpp 
   server/players/PlayerHuman.cpp

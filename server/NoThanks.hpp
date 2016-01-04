@@ -38,6 +38,11 @@ public:
   void run();
 
   /**
+   * \return true if next player is not a human
+   */
+  bool currentPlayerIsAComputer() const;
+
+  /**
    * Return the game state (JSON sstring)
    */
   std::string getJSON();
