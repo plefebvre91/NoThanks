@@ -7,26 +7,15 @@ NoThanks::NoThanks(): currentPlayer(0),
 		      deck(),
 		      players() {
   
-  std::cout << "************"<< std::endl;
+  std::cout << "-- No Thanks! - Game server --"<< std::endl;
   
   nbPlayers = 2;
   
   for(int i=0; i<nbPlayers; i++){
     scores.push_back(0);
-    
-    if(i==0){
-      players.push_back(new PlayerHuman());
-    }
-    players.push_back(new PlayerAverage());
-    //    players[i]->setName(network::conf.names[i]);
-
+    players.push_back(new PlayerHuman());
+    players[0]->setName("Player" + std::to_string(i));
   }
-  players[0]->setName("Ahmed");
-  players[1]->setName("Lisa");
-  
-  std::cout << "attend" << std::endl;
-
-  
 }
 
 NoThanks::~NoThanks() {
@@ -73,7 +62,7 @@ void NoThanks::display() {
   for(auto player : players) {
     player->info();
   }
-
+  /*
   StringBuffer s;
   Writer<StringBuffer> writer(s);
   writer.StartObject();
@@ -106,7 +95,7 @@ void NoThanks::display() {
   writer.EndArray();
   writer.EndObject();
   std::string all = s.GetString();
-
+  */
   //send all data;
 }
 
@@ -114,6 +103,74 @@ bool NoThanks::gameIsFinished() const {
   return deck.isEmpty();
 }
 
+
+std::string NoThanks::dispatch(int id, std::string& json) {
+  Document document;
+  document.Parse(json.c_str());
+  std::string response;
+  
+  assert(document.IsObject());
+
+  Value::ConstMemberIterator itr = document.FindMember("action");
+  
+  const std::string& action = (itr != document.MemberEnd())?
+    itr->value.GetString():"undefined";
+
+  itr = document.FindMember("param");
+  const std::string& param = (itr != document.MemberEnd())?
+    itr->value.GetString():"undefined";
+
+  itr = document.FindMember("value");
+  const std::string& value = (itr != document.MemberEnd())?
+    itr->value.GetString():"undefined";
+  
+  // Command 'set'
+  if(action == "set"){
+    if(param == "name"){
+      const std::string  old_name = players[id]->getName();
+      players[id]->setName(value);
+      
+      response = old_name + " is now called " + value;
+    }
+
+    else {
+      response = "invalid param :" + param;
+    }
+  }
+  
+  // Command 'get'
+  else if(action == "get"){
+    if(param == "name"){
+      response = players[id]->getName();
+    }
+    
+    else if(param == "score"){
+      response = std::to_string(id);
+    }
+
+    else {
+      response = "invalid param in : " + param;
+    }
+  }
+
+  // Command 'play'
+  else if(action == "play"){
+    Action action = (param == "drop") ? ACT_GIVE_A_CHIP : ACT_TAKE_CHIPS;
+    Player& player = *players[id];
+    
+    execute(action, player);
+    updateScores();
+    display();
+  }
+
+  // Invalid command
+  else{
+    response = "invalid command in : " + action;
+  }
+
+  return response;
+
+}
 
 void NoThanks::run(){
   
@@ -153,7 +210,7 @@ void NoThanks::updateScores() {
     
     const std::set<int>& cards = player->getCards();
     auto it = cards.rbegin();  
-    int score = 0;
+    Score score = 0;
     while(it != cards.rend()) {
       while(cards.find((*it)-1) != cards.end())
 	++it;

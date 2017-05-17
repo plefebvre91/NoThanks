@@ -1,3 +1,6 @@
+#ifndef NOTHX_DEFINITIONS_HPP
+#define NOTHX_DEFINITIONS_HPP
+
 //Global information
 #define NOTHX_NB_CARD 33
 #define NOTHX_NB_CHIPS 11
@@ -18,3 +21,12 @@
 #define JSON_VALUE_ACTION_TAKE "take"
 #define JSON_VALUE_ACTION_DROP "drop"
 
+typedef enum {
+  NO_ERROR,
+  ERR_NO_MORE_CHIP
+} GameError;
+
+
+typedef unsigned int Score;
+
+#endif

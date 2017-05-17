@@ -20,7 +20,7 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 
 find_package(Threads REQUIRED)
 
-
+set(BOOST_COROUTINES_NO_DEPRECATION_WARNING 1)
 
 set(SRC_FILES server/main.cpp 
   server/NoThanks.cpp 

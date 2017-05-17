@@ -40,11 +40,6 @@ const std::string&  Player::getName() const {
 }
 
 void Player::info() const {
-  std::cout << std::endl;
-  std::cout <<  name << " (" << chips << ") : ";
-  for(auto c : cards) {
-    std::cout << c << " - ";
-  }
   std::cout << "JSON:" << toJson() << std::endl;
 }
 
@@ -56,11 +51,11 @@ bool Player::adjacentCardIsFound(const Card& card) const {
 }
 
 
-int Player::getScore() const {
+Score Player::getScore() const {
   return score;
 }
 
-void Player::setScore(int s) {
+void Player::setScore(Score s) {
   score = s;
 }
 

@@ -1,19 +1,19 @@
 #include "server_ws.hpp"
-//#include "client_ws.hpp"
+#include "NoThanks.hpp"
+#include <map>
 
 using namespace std;
 
-string handle_message(string& msg){
-  cout << msg << "\n";
-  string str = "reponse serveur\n";
-  return str;
-}
-
 typedef SimpleWeb::SocketServer<SimpleWeb::WS> WsServer;
-//typedef SimpleWeb::SocketClient<SimpleWeb::WS> WsClient;
+
+
+
+
 
 int main() {  
-
+  std::map<size_t,int> map_id;
+  int id = 0;
+  
   WsServer server(8080, 2);
   //Example 1: echo WebSocket endpoint
   //  Added debug messages for example use of the callbacks
@@ -22,17 +22,21 @@ int main() {
   //    ws.onmessage=function(evt){console.log(evt.data);};
   //    ws.send("test");
   auto& echo=server.endpoint["^/echo/?$"];
-    
-  echo.onmessage=[&server](shared_ptr<WsServer::Connection> connection, shared_ptr<WsServer::Message> message) {
+  
+  NoThanks* app = new NoThanks();
+  
+  echo.onmessage=[&server,&app,&map_id](shared_ptr<WsServer::Connection> connection, shared_ptr<WsServer::Message> message) {
     auto message_str=message->string();
-
-    cout << "ID client : " << (size_t)connection.get() << "::";            
-    string response = handle_message(message_str);
-
-    //    cout << "Server: Sending message \"" << response <<  "\" to " << (size_t)connection.get() << endl;
+    
+    int id =  map_id[(size_t)connection.get()];
+    cout <<"ID "<< id << " ("<< (size_t)connection.get()<< ")\n";
+    
+    string response = app->dispatch(id, message_str);
     
     auto send_stream=make_shared<WsServer::SendStream>();
+
     *send_stream << response;//message_str;
+
     //server.send is an asynchronous function
     server.send(connection, send_stream, [](const boost::system::error_code& ec){
 	if(ec) {
@@ -41,9 +45,13 @@ int main() {
 	}
       });
   };
+  
+  echo.onopen=[&map_id,&id](shared_ptr<WsServer::Connection> connection) {
+
+    map_id[(size_t)connection.get()] = id;
+    cout << "Server: nouvelle connexion, client " << id << "("<< (size_t)connection.get() <<")" <<endl;
+    id++;
     
-  echo.onopen=[](shared_ptr<WsServer::Connection> connection) {
-    cout << "Server: Opened connection " << (size_t)connection.get() << endl;
   };
     
   //See RFC 6455 7.4.1. for status codes

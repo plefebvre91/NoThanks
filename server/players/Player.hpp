@@ -76,13 +76,13 @@ public:
   /**
    * Setter for score
    */
-  void setScore(int s);
+  void setScore(Score s);
 
 
   /**
    * Getter for score
    */
-  int getScore() const;
+  Score getScore() const;
 
   /**
    * Convert player information into a JSON String

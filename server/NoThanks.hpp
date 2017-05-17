@@ -37,6 +37,11 @@ public:
    */
   void run();
 
+  /**
+   * Parse received JSON string and call the right service
+   */
+  std::string dispatch(int, std::string&);
+  
 private:
   /**
    * \return true if there is no more card in deck
