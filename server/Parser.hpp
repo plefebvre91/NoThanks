@@ -1,40 +1,62 @@
-#ifndef NOTHX_PARSER_HPP
-#define NOTHX_PARSER_HPP
+#ifndef PARSER_HPP
+#define PARSER_HPP
 
-#include <iostream>
-#include <cstdio>
-#include <vector>
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/writer.h"
 #include "rapidjson/document.h"
-#include "Definitions.hpp"
-#include "Logger.hpp"
 
-using namespace rapidjson;
 
-struct Info {
-  int nbPlayers;
-  std::vector<std::string> names;
-  std::vector<std::string> types;
-  std::string message;
-  int action;
-  int is_fresh;
-  
-  void reset() {
-    nbPlayers = 0;
-    names.clear();
-    types.clear();
-    action = 0;
-    is_fresh = false;
-  }
+enum class Request {
+  SET_NAME,
+  GET_NAME,
+  GET_SCORE,
+  PLAY_GIVE_A_CHIP,
+  PLAY_TAKE_CHIPS,
+
+  INVALID_PARAM,
+  INVALID_VALUE,
+  INVALID_ACTION,
+
+  UNDEFINED
 };
-
-
+  
 
 class Parser {
 public:
+
+  /*
+   * Constructor
+   */
   Parser();
-  Info& get(const std::string& str);
-  
+
+  Request parse(const std::string& json);
+
+  inline const std::string& getAction() const
+  {
+    return action;
+  }
+
+  inline const std::string& getValue() const
+  {
+    return value;
+  }
+
+  inline const std::string& getParam() const
+  {
+    return param;
+  }
+
+
+  /**
+   * Destructor
+   */
+  ~Parser();
+    
 private:
-  Info info;
+  rapidjson::Document document;
+  std::string action;
+  std::string param;
+  std::string value;
 };
+
 #endif

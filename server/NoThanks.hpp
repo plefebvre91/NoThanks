@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <algorithm>
+#include <vector>
 
 #include "Definitions.hpp"
 #include "Player.hpp"
@@ -15,13 +16,16 @@
 #include "Logger.hpp"
 #include "Action.hpp"
 #include "Card.hpp"
+#include "Parser.hpp"
 
 /**
  * Main class
  */
 
 class NoThanks {
+
 public:
+
   /**
    * Constructor
    */
@@ -94,5 +98,8 @@ private:
   
   // Players
   std::vector<Player*> players;
+
+  // Parser
+  Parser parser;
 };
 #endif

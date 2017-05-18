@@ -1,59 +1,92 @@
 #include "Parser.hpp"
-#include "ctime"
-#include <assert.h>
-#include <mutex>
+
+
+
 Parser::Parser(){}
 
-Info& Parser::get(const std::string& str) {
-  Document document;
-  
-  std::string s(str.c_str());
-  char* buffer = (char*)s.c_str();
-  
-  if (document.ParseInsitu(buffer).HasParseError()) {
-    Logger::get().info("Erreur de Syntaxe" + str);
-    return info;
-  }
-  
-  if(document.HasMember(JSON_KEY_ACTION))
-    info.action = document[JSON_KEY_ACTION].GetUint();
+Parser::~Parser(){}
 
-  if(document.HasMember(JSON_KEY_MESSAGE))
-    info.message = document[JSON_KEY_MESSAGE].GetString();
+#define NOTHX_JSON_KEY_PARAM  "param"
+#define NOTHX_JSON_KEY_VALUE  "value"
+#define NOTHX_JSON_KEY_ACTION "action"
+
+#define NOTHX_STR_UNDEFINED   "undefined"
+#define NOTHX_STR_SET         "set"
+#define NOTHX_STR_GET         "get"
+#define NOTHX_STR_PLAY        "play"
+#define NOTHX_STR_SCORE       "score"
+#define NOTHX_STR_NAME        "name"
+#define NOTHX_STR_TAKE        "take"
+#define NOTHX_STR_DROP        "drop"
+#define NOTHX_STR_TAKE        "take"
+
+
+Request Parser::parse(const std::string& json)
+{
+  Request rc = Request::UNDEFINED;
+  document.Parse(json.c_str());
   
-  if(document.HasMember("players")) {
-    const Value& players = document["players"];
-    
-    info.nbPlayers = players.Size();
-
-    for (Value::ConstValueIterator itr = players.Begin(); 
-	 itr != players.End(); ++itr) {
-      if(itr->HasMember("name")){
-	const Value& metadata = (*itr)["name"];
-	info.names.push_back(metadata.GetString());
-      }
-
-      if(itr->HasMember("type")){
-	const Value& metadata = (*itr)["type"];
-	info.types.push_back(metadata.GetString());
-      }
+  assert(document.IsObject());
+  
+  rapidjson::Value::ConstMemberIterator itr =
+    document.FindMember(NOTHX_JSON_KEY_ACTION);
+  
+  action = (itr != document.MemberEnd())?
+    itr->value.GetString():NOTHX_STR_UNDEFINED;
+  
+  itr = document.FindMember(NOTHX_JSON_KEY_PARAM);
+  param = (itr != document.MemberEnd())?
+    itr->value.GetString():NOTHX_STR_UNDEFINED;
+  
+  itr = document.FindMember(NOTHX_JSON_KEY_VALUE);
+  value = (itr != document.MemberEnd())?
+    itr->value.GetString():NOTHX_STR_UNDEFINED;
+  
+  // Command 'set'
+  if(action == NOTHX_STR_SET) {
+    if(param == NOTHX_STR_NAME) {
+      rc = Request::SET_NAME;
+    }
+    else {
+      rc = Request::INVALID_PARAM;
     }
   }
+  
+  // Command 'get'
+  else if(action == NOTHX_STR_GET){
+    if(param == NOTHX_STR_NAME){
+      rc = Request::GET_NAME;
+    }
     
-  Logger::get().info("From client:");
-  Logger::get().info("Nombre joueurs: "+std::to_string(info.nbPlayers));
-  Logger::get().info("Action:"+std::to_string(info.action));
+    else if(param == NOTHX_STR_SCORE){
+      rc = Request::GET_SCORE;
+    }
 
-  
-  // for(auto n : info.names){
-  //   Logger::get().info("Boucle noms");
-  //   Logger::get().info(n);
-  // }
+    else {
+      rc = Request::INVALID_PARAM;
+    }
+  }
 
-  // for(auto n : info.types){
-  //   Logger::get().info("Boucle types");
-  //   Logger::get().info(n);
-  // }
+  // Command 'play'
+  else if(action == NOTHX_STR_PLAY){
+    if(param == NOTHX_STR_DROP){
+      rc = Request::PLAY_GIVE_A_CHIP;
+    }
+
+    if(param == NOTHX_STR_TAKE){
+      rc = Request::PLAY_TAKE_CHIPS;
+    }
+    
+    else {
+      rc = Request::INVALID_PARAM;
+    }
+  }
   
-  return info;
+  // Invalid command
+  else{
+    rc = Request::INVALID_ACTION;
+  }
+
+  return rc;
+
 }

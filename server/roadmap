@@ -1,0 +1,35 @@
+Parseur
+------
+
+Recevoir:
+	  - "est ce à mon tour" = "situation de jeu ?"
+	  - "action de jeu"
+	  - "changer mon nom"
+	  - "jeu fini ?"
+	  - "situation jeu"
+
+Envoyer:
+          - "oui/non c'est ton tour" = situation de jeu ?
+	  - situation de jeu
+	  - ok
+	  - jeu fini ou non
+	  - situation de jeu
+
+
+JSON:
+	{
+		action: <set|get|play>
+		id    : <id>
+		param : <param>
+		value : <value>
+}
+
+RECEIVE:
+	set name <id> <name> : pour changer de nom
+	play <id> <take|drop>
+	get gameover
+	get game
+	get ismyturn
+	
+
+SEND:

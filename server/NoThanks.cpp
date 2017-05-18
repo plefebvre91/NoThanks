@@ -1,11 +1,15 @@
 #include "NoThanks.hpp"
 
+#include <vector>
+#include <string>
+
 NoThanks::NoThanks(): currentPlayer(0),
 		      chipsOnTable(0),
 		      scores(),
 		      cardOnTop(),
 		      deck(),
-		      players() {
+		      players(),
+		      parser(){
   
   std::cout << "-- No Thanks! - Game server --"<< std::endl;
   
@@ -105,71 +109,50 @@ bool NoThanks::gameIsFinished() const {
 
 
 std::string NoThanks::dispatch(int id, std::string& json) {
-  Document document;
-  document.Parse(json.c_str());
   std::string response;
-  
-  assert(document.IsObject());
 
-  Value::ConstMemberIterator itr = document.FindMember("action");
-  
-  const std::string& action = (itr != document.MemberEnd())?
-    itr->value.GetString():"undefined";
+  Request request = parser.parse(json);
 
-  itr = document.FindMember("param");
-  const std::string& param = (itr != document.MemberEnd())?
-    itr->value.GetString():"undefined";
+  const std::string& strAction = parser.getAction();
+  const std::string& strParam = parser.getParam();
+  const std::string& strValue = parser.getValue();
 
-  itr = document.FindMember("value");
-  const std::string& value = (itr != document.MemberEnd())?
-    itr->value.GetString():"undefined";
+  Player& player = *players[id];
   
-  // Command 'set'
-  if(action == "set"){
-    if(param == "name"){
-      const std::string  old_name = players[id]->getName();
-      players[id]->setName(value);
-      
-      response = old_name + " is now called " + value;
-    }
+  switch(request){
+  case (Request::INVALID_PARAM): response = "invalid param"; break;
+  case (Request::INVALID_VALUE): response = "invalid value"; break;
+  case (Request::INVALID_ACTION): response = "invalid action"; break;
 
-    else {
-      response = "invalid param :" + param;
-    }
-  }
-  
-  // Command 'get'
-  else if(action == "get"){
-    if(param == "name"){
-      response = players[id]->getName();
-    }
+  case (Request::SET_NAME):
+    players[id]->setName(strValue);
+    response = "name changed";
+    break;
+
+  case (Request::GET_NAME):
+    response = players[id]->getName();
+    break;
     
-    else if(param == "score"){
-      response = std::to_string(id);
-    }
+  case (Request::GET_SCORE):
+    response = players[id]->getScore();
+    break;
 
-    else {
-      response = "invalid param in : " + param;
-    }
-  }
-
-  // Command 'play'
-  else if(action == "play"){
-    Action action = (param == "drop") ? ACT_GIVE_A_CHIP : ACT_TAKE_CHIPS;
-    Player& player = *players[id];
-    
-    execute(action, player);
+  case (Request::PLAY_GIVE_A_CHIP):
+    execute(ACT_GIVE_A_CHIP, player);
     updateScores();
-    display();
-  }
+    response = "give a chip";
+    break;
+    
+  case (Request::PLAY_TAKE_CHIPS):
+    execute(ACT_TAKE_CHIPS, player);
+    updateScores();
+    response = "take chips";
+    break;
 
-  // Invalid command
-  else{
-    response = "invalid command in : " + action;
+  default: response = "unknown error"; break;
   }
-
+  
   return response;
-
 }
 
 void NoThanks::run(){
