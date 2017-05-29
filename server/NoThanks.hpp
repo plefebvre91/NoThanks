@@ -39,7 +39,7 @@ public:
   /**
    * Main loop
    */
-  void run();
+  //  void run();
 
   /**
    * Parse received JSON string and call the right service

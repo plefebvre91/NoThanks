@@ -148,13 +148,26 @@ std::string NoThanks::dispatch(int id, std::string& json) {
     updateScores();
     response = "take chips";
     break;
+    
+  case (Request::GET_GAME):
+    response = players[id]->toJson();
+    break;
+    
+  case (Request::CARD_ON_TOP):
+    std::cout << "get card on top\n";
+    
+    response = "{\"card\":\"resources/img/cards/" + std::to_string(deck.first().getValue()) + ".png\"}"; 
 
+    std::cout << response + "\n";
+    break;
+
+    
   default: response = "unknown error"; break;
   }
   
   return response;
 }
-
+#if 0
 void NoThanks::run(){
   
   Logger::get().info(NOTHX_TITLE);
@@ -179,7 +192,7 @@ void NoThanks::run(){
   updateScores();
   showScores();
 }
-
+#endif
 
 void NoThanks::selectNextPlayer() {
   Logger::get().info("Joueur suivant...");

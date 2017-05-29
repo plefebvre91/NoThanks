@@ -1,5 +1,5 @@
 #include "Parser.hpp"
-
+#include <iostream>
 
 
 Parser::Parser(){}
@@ -16,17 +16,22 @@ Parser::~Parser(){}
 #define NOTHX_STR_PLAY        "play"
 #define NOTHX_STR_SCORE       "score"
 #define NOTHX_STR_NAME        "name"
+#define NOTHX_STR_GAME        "game"
 #define NOTHX_STR_TAKE        "take"
 #define NOTHX_STR_DROP        "drop"
-#define NOTHX_STR_TAKE        "take"
-
+#define NOTHX_STR_CARD_ON_TOP "card-on-top"
 
 Request Parser::parse(const std::string& json)
 {
   Request rc = Request::UNDEFINED;
   document.Parse(json.c_str());
-  
-  assert(document.IsObject());
+
+
+  std::cout << json.c_str()<< "\n";
+  if(!document.IsObject()){
+    std::cout << "Invalid Object";
+    return Request::INVALID_ACTION;
+  }
   
   rapidjson::Value::ConstMemberIterator itr =
     document.FindMember(NOTHX_JSON_KEY_ACTION);
@@ -62,6 +67,14 @@ Request Parser::parse(const std::string& json)
       rc = Request::GET_SCORE;
     }
 
+    else if(param == NOTHX_STR_GAME){
+      rc = Request::GET_GAME;
+    }
+
+    else if(param == NOTHX_STR_CARD_ON_TOP){
+      rc = Request::CARD_ON_TOP;
+    }
+    
     else {
       rc = Request::INVALID_PARAM;
     }
@@ -73,7 +86,7 @@ Request Parser::parse(const std::string& json)
       rc = Request::PLAY_GIVE_A_CHIP;
     }
 
-    if(param == NOTHX_STR_TAKE){
+    else if(param == NOTHX_STR_TAKE){
       rc = Request::PLAY_TAKE_CHIPS;
     }
     

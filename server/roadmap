@@ -22,7 +22,7 @@ JSON:
 		id    : <id>
 		param : <param>
 		value : <value>
-}
+	}
 
 RECEIVE:
 	set name <id> <name> : pour changer de nom

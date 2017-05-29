@@ -26,7 +26,7 @@ for(i=4;i<26;i++){
 
 var playing = false;
 
-var ws = new WebSocket("ws://localhost:9001/");
+var ws = new WebSocket("ws://localhost:8080/echo");
 
 ws.onclose = function(e) {
     $("#title").html("Close");
@@ -39,19 +39,21 @@ ws.onerror = function(e){
     ws.close();
 };
 
+var cardOnTop = "resources/img/cards/4.png";
+
 ws.onmessage = function(e){
     console.log(e.data);
-    alert('a');
-    if(playing){
-	var player = new Object();
-	player = JSON.parse(e.data);
-	for(i=0;i<players.length;i++){
-	    players[i] = player[i];
-	}
+    var response;
+    response = JSON.parse(String(e.data));
+
+    if(response.hasOwnProperty("card"))
+    {
+	console.log(response.card);
+	cardOnTop = response.card;
     }
 };
 
-		    
+
 /**
  * Game creation module controller
  */
@@ -60,11 +62,8 @@ app.controller('GameCreationCtrl',
 		
 		function($scope) {
 		    
-		    
-		    
 		    ws.onopen = function(e){
 			$("#title").html("OK");
-//			$scope.ws.send('LOL');
 			$scope.setStatus(MSG_CONNECTED);
 		    };
 		    
@@ -81,8 +80,6 @@ app.controller('GameCreationCtrl',
 		    
 		    
 		    $scope.setStatus = setStatus;
-		    
-		    
 		    
 		    // Players names
 		    $scope.names = ['Ahmed', 'Lisa', 
@@ -112,12 +109,29 @@ app.controller('GameCreationCtrl',
 
 		    $scope.currentPlayer = $scope.players[0];
 		    $scope.playerIndex = 0;
-		    $scope.nextPlayer = function(){
-			$scope.playerIndex++;
-			$scope.playerIndex %= $scope.players.length;
-			$scope.currentPlayer = $scope.players[$scope.playerIndex];
-			ws.send("query");
+		    
+		    $scope.take = function(){
+			ws.send("{\"action\":\"play\",\"param\":\"take\"}");
+			ws.send("{\"action\":\"get\",\"param\":\"game\"}");
+			$scope.getCardOnTop();
+			$scope.cardOnTop = cardOnTop;
 			return false;
+		    };
+
+
+		    $scope.drop = function(){
+			ws.send("{\"action\":\"play\",\"param\":\"drop\"}");
+			ws.send("{\"action\":\"get\",\"param\":\"game\"}");
+			$scope.getCardOnTop();
+			$scope.cardOnTop = cardOnTop;
+			return false;
+		    };
+
+		    $scope.cardOnTop = "resources/img/cards/4.png";
+		    
+		    $scope.getCardOnTop = function(){
+			ws.send("{\"action\":\"get\",\"param\":\"card-on-top\"}");
+			$scope.cardOnTop = cardOnTop;
 		    };
 		    
 		    // Remove the last player

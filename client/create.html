@@ -99,20 +99,20 @@
 	  <div class="panel-body">
 	    <div class="col-md-3 text-center">
 	      
-	      <img src="resources/img/cards/23.png" alt="23">
+	      <img ng-src="{{ cardOnTop }}" alt="23">
 	      <div class="text-center">
-		<p>Carte tirée</p>
+		<p ng-model="$scope.cardOnTop">Carte tirée: {{ $scope.cardOnTop }}</p>
 		<div class="btn-group">
 		  <button type="button" 
 			  class="btn btn-success"
-			  ng-click="nextPlayer()"
+			  ng-click="take()"
 			  ><span class="glyphicon glyphicon-ok"></span> 
 		    Prendre
 		  </button>
 
 		  <button type="button" 
 			  class="btn btn-danger"
-			  ng-click="nextPlayer()"
+			  ng-click="drop()"
 			  ><span class="glyphicon glyphicon-remove"></span> 
 		    Donner
 		  </button>
