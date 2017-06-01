@@ -34,7 +34,7 @@ ws.onerror = function(e){
 
 var cardOnTop = "resources/img/cards/4.png";
 var cards = [];
-
+var score = 0;
 ws.onmessage = function(e){
     console.log(e.data);
     var response;
@@ -51,6 +51,12 @@ ws.onmessage = function(e){
 	console.log(response.cards);
 	cards = response.cards;
     }
+    else if(response.hasOwnProperty("score"))
+    {
+	console.log(response.score);
+	score = response.score;
+    }
+
 
 };
 
@@ -147,6 +153,14 @@ app.controller('GameCreationCtrl',
 			},200);			
 		    };
 		    
+		    $scope.getScore = function(){
+			ws.send("{\"action\":\"get\",\"param\":\"score\"}");
+			$timeout(function() {
+			    $scope.currentPlayer.score = score;
+			},200);			
+		    };
+
+		    
 		    // Remove the last player
 		    $scope.removePlayer = function() {
 			removePlayer($scope.players);
@@ -154,8 +168,8 @@ app.controller('GameCreationCtrl',
 
 		    // Enables/disables screen display
 		    $scope.showCreationScreen = true;
-		    $scope.showScoresScreen = false;
-		    $scope.showGameScreen   = false;
+		    $scope.showScoresScreen = true;
+		    $scope.showGameScreen   = true;
 		    
 		    $scope.showCreation = function(display) {
 			$scope.showCreationScreen = display;
@@ -173,15 +187,18 @@ app.controller('GameCreationCtrl',
 			$timeout(function(){
 			    ws.send("{\"action\":\"get\",\"param\":\"game\"}");
 			    $scope.updatePlayerCard(0,cards);
+			    $scope.getCardOnTop();
 			    $scope.updateAll();
+			    $scope.getScore();
 			},800);
+
 		    };
 		    
 		    $scope.createGame = function() {
 			_createGame($scope.players);
 			
 			$scope.showCreation(false);
-			$scope.showScores(false);
+			$scope.showScores(true);
 			$scope.showGame(true);
 			$scope.updatePlayerCard(0,cards);
 			$scope.getCardOnTop();

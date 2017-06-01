@@ -85,9 +85,9 @@
 	  <div class="col-md-12">
 	    <h2><small>Scores</small></h2>
 	    <div ng-repeat="player in players">
-	      <player-info name="{{ player.name }}"
-			   title="{{ player.type }}" 
-			   subtitle="{{ player.score }}"></player-info>
+	      <player-info name="{{ currentPlayer.name }}"
+			   title="{{ currentPlayer.type }}" 
+			   subtitle="{{ currentPlayer.score }}"></player-info>
 	    </div><!--ng-reapeat-->
 	  </div><!--col-md-12-->
 	</div><!--row-->

@@ -134,7 +134,7 @@ std::string NoThanks::dispatch(int id, std::string& json) {
     break;
     
   case (Request::GET_SCORE):
-    response = players[id]->getScore();
+    response = "{\"score\":\" " + std::to_string((int)(players[id]->getScore())) +" \"}";
     break;
 
   case (Request::PLAY_GIVE_A_CHIP):
