@@ -17,7 +17,7 @@ enum class Request {
   INVALID_PARAM,
   INVALID_VALUE,
   INVALID_ACTION,
-
+  PLAYER_INFO,
   UNDEFINED
 };
   

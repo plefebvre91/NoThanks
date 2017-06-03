@@ -17,9 +17,7 @@ app.controller('MenuCtrl',
 		}
 	       ]);
 
-var playing = false;
-
-var ws = new WebSocket("ws://localhost:8080/echo");
+var ws = new WebSocket("ws://localhost:8080/nthx");
 
 ws.onclose = function(e) {
     $("#title").html("Close");
@@ -35,29 +33,38 @@ ws.onerror = function(e){
 var cardOnTop = "resources/img/cards/4.png";
 var cards = [];
 var score = 0;
+var coins = 11;
+var name="no_name";
+
 ws.onmessage = function(e){
     console.log(e.data);
     var response;
     response = JSON.parse(String(e.data));
-
     if(response.hasOwnProperty("card"))
     {
 	console.log(response.card);
-	
 	cardOnTop = response.card;
     }
-    else if(response.hasOwnProperty("cards"))
+    if(response.hasOwnProperty("cards"))
     {
 	console.log(response.cards);
 	cards = response.cards;
     }
-    else if(response.hasOwnProperty("score"))
+    if(response.hasOwnProperty("score"))
     {
 	console.log(response.score);
 	score = response.score;
     }
-
-
+    if(response.hasOwnProperty("coins"))
+    {
+	console.log(response.coins);
+	coins = response.coins;
+    }
+    if(response.hasOwnProperty("name"))
+    {
+	console.log(response.name);
+	name = response.name;
+    }    
 };
 
 
@@ -68,30 +75,28 @@ app.controller('GameCreationCtrl',
 	       ['$scope','$timeout',
 		
 		function($scope, $timeout) {
-		    
 		    ws.onopen = function(e){
 			$("#title").html("OK");
 			$scope.setStatus(MSG_CONNECTED);
 		    };
-		    
-		    
+
 		    $scope.send = function(msg) {
 			var i=0;
 			if($scope.ws.readyState != 1){
-			    $("#title").html("Autre essai" + i);
-			    setTimeout($scope.send(msg), 400);
+			    $("#title").html("Tentative " + i);
+			    setTimeout(function(){
+				$scope.send(msg)
+			    },500);
 			    i++;
 			}
 			else  $scope.send(msg);
 		    };
 		    
-		    
 		    $scope.setStatus = setStatus;
 		    
 		    // Players names
 		    $scope.names = ['Ahmed', 'Lisa', 
-				    'Leo', 'Francoise', 'Astrid'];
-		    
+				    'Leo', 'Francoise', 'Astrid'];		    
 		    // Players info
 		    $scope.players = [
 			{
@@ -111,36 +116,18 @@ app.controller('GameCreationCtrl',
 		    
 		    // Add a new player
 		    $scope.addPlayer = function(type){
-			addPlayer($scope.players, $scope.names, type);
+			addPlayer($scope.players,
+				  $scope.names,
+				  type);
 		    };
 
 		    
 		    $scope.currentPlayer = $scope.players[0];
-		    $scope.playerIndex = 0;
 
-		    $scope.updatePlayerCard = function(playerId, cards){
-			$timeout(
-			    function() {
-				$scope.currentPlayer.cards = cards;
-			    },200
-			);
-		    };
-		    
-		    $scope.take = function(){
-			ws.send("{\"action\":\"play\",\"param\":\"take\"}");
+		    $scope.play = function(action) {
+			ws.send("{\"action\":\"play\",\"param\":\"" + action + "\"}");
+			$scope.updatePlayer();
 			$scope.getCardOnTop();
-//			ws.send("{\"action\":\"get\",\"param\":\"game\"}");
-//			$scope.updatePlayerCard(0,cards);
-			
-			return false;
-		    };
-		    
-
-		    $scope.drop = function(){
-			ws.send("{\"action\":\"play\",\"param\":\"drop\"}");
-
-			$scope.getCardOnTop();
-			
 			return false;
 		    };
 
@@ -153,13 +140,15 @@ app.controller('GameCreationCtrl',
 			},200);			
 		    };
 		    
-		    $scope.getScore = function(){
-			ws.send("{\"action\":\"get\",\"param\":\"score\"}");
+		    $scope.updatePlayer = function(){
+			ws.send("{\"action\":\"player-info\"}");
 			$timeout(function() {
 			    $scope.currentPlayer.score = score;
+			    $scope.currentPlayer.cards = cards;
+			    $scope.currentPlayer.name  = name;
+			    $scope.currentPlayer.coins = coins;
 			},200);			
 		    };
-
 		    
 		    // Remove the last player
 		    $scope.removePlayer = function() {
@@ -185,13 +174,10 @@ app.controller('GameCreationCtrl',
 
 		    $scope.updateAll = function(){
 			$timeout(function(){
-			    ws.send("{\"action\":\"get\",\"param\":\"game\"}");
-			    $scope.updatePlayerCard(0,cards);
+			    $scope.updatePlayer();
 			    $scope.getCardOnTop();
 			    $scope.updateAll();
-			    $scope.getScore();
-			},800);
-
+			},7000);
 		    };
 		    
 		    $scope.createGame = function() {
@@ -200,22 +186,15 @@ app.controller('GameCreationCtrl',
 			$scope.showCreation(false);
 			$scope.showScores(true);
 			$scope.showGame(true);
-			$scope.updatePlayerCard(0,cards);
+			$scope.updatePlayer();
 			$scope.getCardOnTop();
 			$scope.updateAll();
-			
 			return false;
-		    }
-				
-
+		    };
 		}]);
 
 
 function _createGame(players){
-    playing = true;
-    var data = '{"players":' + angular.toJson(players)+'}';
-//    ws.send(data);
-    console.log(data);
     var audio = new Audio('resources/sound/sound.mp3');
     audio.play();
     return false;

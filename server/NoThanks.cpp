@@ -66,41 +66,6 @@ void NoThanks::display() {
   for(auto player : players) {
     player->info();
   }
-  /*
-  StringBuffer s;
-  Writer<StringBuffer> writer(s);
-  writer.StartObject();
-  
-  writer.String("players");
-  writer.StartArray();
-  for (auto player : players) {
-    writer.StartObject();
-    writer.String(JSON_KEY_NAME);
-    writer.String(player->getName().c_str());
-    
-    writer.String(JSON_KEY_SCORE);
-    writer.Uint(player->getScore());
-  
-    writer.String(JSON_KEY_COINS);
-    writer.Uint(player->getNbChips());
-  
-    writer.String(JSON_KEY_CARDS);
-    const std::set<int>& cards = player->getCards();
-
-    writer.StartArray();
-    for (auto card : cards) {
-      writer.Uint(card);
-    }
-    writer.EndArray();
-    writer.EndObject();
-
-    
-  }
-  writer.EndArray();
-  writer.EndObject();
-  std::string all = s.GetString();
-  */
-  //send all data;
 }
 
 bool NoThanks::gameIsFinished() const {
@@ -124,6 +89,10 @@ std::string NoThanks::dispatch(int id, std::string& json) {
   case (Request::INVALID_VALUE): response = "invalid value"; break;
   case (Request::INVALID_ACTION): response = "invalid action"; break;
 
+  case (Request::PLAYER_INFO):
+    response = players[id]->toJson();
+    break;
+
   case (Request::SET_NAME):
     players[id]->setName(strValue);
     response = "name changed";
@@ -136,17 +105,16 @@ std::string NoThanks::dispatch(int id, std::string& json) {
   case (Request::GET_SCORE):
     response = "{\"score\":\" " + std::to_string((int)(players[id]->getScore())) +" \"}";
     break;
-
+    
   case (Request::PLAY_GIVE_A_CHIP):
     execute(ACT_GIVE_A_CHIP, player);
     updateScores();
-    response = "give a chip";
     break;
-    
+  
+
   case (Request::PLAY_TAKE_CHIPS):
     execute(ACT_TAKE_CHIPS, player);
     updateScores();
-    response = "take chips";
     break;
     
   case (Request::GET_GAME):

@@ -10,6 +10,7 @@ Parser::~Parser(){}
 #define NOTHX_JSON_KEY_VALUE  "value"
 #define NOTHX_JSON_KEY_ACTION "action"
 
+#define NOTHX_STR_PLAYER_INFO "player-info"
 #define NOTHX_STR_UNDEFINED   "undefined"
 #define NOTHX_STR_SET         "set"
 #define NOTHX_STR_GET         "get"
@@ -25,9 +26,7 @@ Request Parser::parse(const std::string& json)
 {
   Request rc = Request::UNDEFINED;
   document.Parse(json.c_str());
-
-
-  std::cout << json.c_str()<< "\n";
+  
   if(!document.IsObject()){
     std::cout << "Invalid Object";
     return Request::INVALID_ACTION;
@@ -46,9 +45,14 @@ Request Parser::parse(const std::string& json)
   itr = document.FindMember(NOTHX_JSON_KEY_VALUE);
   value = (itr != document.MemberEnd())?
     itr->value.GetString():NOTHX_STR_UNDEFINED;
+
+  // Command 'player-info'
+  if(action == NOTHX_STR_PLAYER_INFO) {
+    rc = Request::PLAYER_INFO;
+  }
   
   // Command 'set'
-  if(action == NOTHX_STR_SET) {
+  else if(action == NOTHX_STR_SET) {
     if(param == NOTHX_STR_NAME) {
       rc = Request::SET_NAME;
     }
@@ -56,6 +60,7 @@ Request Parser::parse(const std::string& json)
       rc = Request::INVALID_PARAM;
     }
   }
+  
   
   // Command 'get'
   else if(action == NOTHX_STR_GET){
@@ -70,7 +75,7 @@ Request Parser::parse(const std::string& json)
     else if(param == NOTHX_STR_GAME){
       rc = Request::GET_GAME;
     }
-
+    
     else if(param == NOTHX_STR_CARD_ON_TOP){
       rc = Request::CARD_ON_TOP;
     }
@@ -101,5 +106,4 @@ Request Parser::parse(const std::string& json)
   }
 
   return rc;
-
 }
