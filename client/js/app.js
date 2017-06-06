@@ -30,7 +30,7 @@ ws.onerror = function(e){
     ws.close();
 };
 
-var cardOnTop = "resources/img/cards/4.png";
+var cardOnTop = "resources/img/cards/no.png";
 var cards = [];
 var score = 0;
 var coins = 11;
@@ -131,7 +131,7 @@ app.controller('GameCreationCtrl',
 			return false;
 		    };
 
-		    $scope.cardOnTop = "resources/img/cards/4.png";
+		    $scope.cardOnTop = cardOnTop;
 		    
 		    $scope.getCardOnTop = function(){
 			ws.send("{\"action\":\"get\",\"param\":\"card-on-top\"}");
