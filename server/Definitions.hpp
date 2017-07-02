@@ -18,6 +18,11 @@
 #define JSON_KEY_NAME  "name"
 
 
+enum class Error {
+  NoError,
+  NoMoreChips
+};
+
 /* Error codes */
 typedef unsigned int Score;
 

@@ -64,6 +64,11 @@ ws.onmessage = function(e){
     {
 	console.log(response.name);
 	name = response.name;
+    }
+    if(response.hasOwnProperty("status"))
+    {
+	console.log(response.status);
+	setStatus(response.status);
     }    
 };
 
@@ -137,7 +142,7 @@ app.controller('GameCreationCtrl',
 			ws.send("{\"action\":\"get\",\"param\":\"card-on-top\"}");
 			$timeout(function() {
 			    $scope.cardOnTop = cardOnTop;
-			},200);			
+			},100);			
 		    };
 		    
 		    $scope.updatePlayer = function(){
@@ -147,7 +152,7 @@ app.controller('GameCreationCtrl',
 			    $scope.currentPlayer.cards = cards;
 			    $scope.currentPlayer.name  = name;
 			    $scope.currentPlayer.coins = coins;
-			},200);			
+			},100);			
 		    };
 		    
 		    // Remove the last player
@@ -177,15 +182,15 @@ app.controller('GameCreationCtrl',
 			    $scope.updatePlayer();
 			    $scope.getCardOnTop();
 			    $scope.updateAll();
-			},7000);
+			},200);
 		    };
 		    
 		    $scope.createGame = function() {
 			_createGame($scope.players);
 			
 			$scope.showCreation(false);
-			$scope.showScores(true);
-			$scope.showGame(true);
+			$scope.showScores(false);
+			$scope.showGame(false);
 			$scope.updatePlayer();
 			$scope.getCardOnTop();
 			$scope.updateAll();

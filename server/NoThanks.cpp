@@ -28,12 +28,12 @@ NoThanks::~NoThanks() {
   }
 }
 
-void NoThanks::execute(const Action& action, Player& player) {
+Error NoThanks::execute(const Action& action, Player& player) {
   // prendre les jetons sur la table
   if(action == ACT_TAKE_CHIPS) {
     // Preciser si on a pas le choix
     if(!player.hasChips()) {
-      Logger::get().info("Plus aucun jeton"); 
+      
     }
     
     Logger::get().info("Action: prendre la carte et les jetons"); 
@@ -49,12 +49,20 @@ void NoThanks::execute(const Action& action, Player& player) {
   
   else if(action == ACT_GIVE_A_CHIP) {
     Logger::get().info("Action: donner un jeton"); 
+
+    if(!player.hasChips()) {
+      Logger::get().info("Plus aucun jeton"); 
+      return Error::NoMoreChips;
+    }
+    
     // poser un jeton
     player.drop();
 
     // ajouter le jeton sur la table
     ++chipsOnTable;
   }
+
+  return Error::NoError;
   
 }
 
@@ -83,12 +91,18 @@ std::string NoThanks::dispatch(int id, std::string& json) {
   const std::string& strValue = parser.getValue();
 
   Player& player = *players[id];
+
+
+  if(gameIsFinished()){
+    response = "{\"status\":\"Fin du jeu\"}";
+    return response;
+  }
   
   switch(request){
   case (Request::INVALID_PARAM): response = "invalid param"; break;
   case (Request::INVALID_VALUE): response = "invalid value"; break;
   case (Request::INVALID_ACTION): response = "invalid action"; break;
-
+    
   case (Request::PLAYER_INFO):
     response = players[id]->toJson();
     break;
@@ -107,8 +121,12 @@ std::string NoThanks::dispatch(int id, std::string& json) {
     break;
     
   case (Request::PLAY_GIVE_A_CHIP):
-    execute(ACT_GIVE_A_CHIP, player);
-    updateScores();
+    if(execute(ACT_GIVE_A_CHIP, player) != Error::NoError){
+      response = "{\"status\":\"Pas assez de jeton\"}";
+    }
+    else {
+      updateScores();
+    }
     break;
   
 
@@ -122,11 +140,7 @@ std::string NoThanks::dispatch(int id, std::string& json) {
     break;
     
   case (Request::CARD_ON_TOP):
-    std::cout << "get card on top\n";
-    
     response = "{\"card\":\"resources/img/cards/" + std::to_string(deck.first().getValue()) + ".png\"}"; 
-
-    std::cout << response + "\n";
     break;
 
     
@@ -183,6 +197,11 @@ void NoThanks::updateScores() {
       ++it;
     }
     score -= player->getNbChips();
+
+    if((int)score < 0) {
+      score = 0;
+    }
+    
     player->setScore(score);
   }
 }

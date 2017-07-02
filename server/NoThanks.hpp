@@ -55,7 +55,7 @@ private:
   /**
    * A player move
    */
-  void execute(const Action& action, Player& player);
+  Error execute(const Action& action, Player& player);
   
   /**
    * Compute scores

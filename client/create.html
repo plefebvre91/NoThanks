@@ -76,6 +76,7 @@
 		       title="Jetons" 
 		       subtitle="{{ player.coins }}"
 		       name="{{ player.name }}">
+	    
 	  </player-info>
 	</div>
       </div>
@@ -94,11 +95,12 @@
       </div><!--ng-show-->
       
       
-      <div ng-show="showGameScreen" class="col-md-12">
+      <div class="col-md-12">
 	<div class="panel panel-default">
 	  <div class="panel-body">
 	    <div class="col-md-3 text-center">
-	      
+	      <h3>Score : {{ currentPlayer.score }}</h3>
+	      <h3>Jeton(s) : {{ currentPlayer.coins }}</h3>
 	      <img ng-src="{{ cardOnTop }}" alt="23">
 	      <div class="text-center">
 		<p ng-model="$scope.cardOnTop">Carte tirée</p>
